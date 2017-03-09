@@ -60,6 +60,8 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -76,44 +78,51 @@ public class Main extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem18 = new javax.swing.JMenuItem();
+        jMenuItem19 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
+        jMenuItem20 = new javax.swing.JMenuItem();
+        jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem22 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
-        jMenuItem15 = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
+
+        jMenuItem16.setText("jMenuItem16");
+
+        jMenuItem17.setText("jMenuItem17");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Principal / Tu Sonografia");
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton1.setText("Generar Reporte");
+        jButton1.setText("USUARIO");
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton2.setText("Nueva Sonografia");
+        jButton2.setText("REPARAR");
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton3.setText("Nuevo Paciente");
+        jButton3.setText("COTIZACION");
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton4.setText("Buscar Sonografia");
+        jButton4.setText("FACTURA");
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton5.setText("Buscar Paciente");
+        jButton5.setText("CLIENTE");
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton6.setText("Buscar Entrega");
+        jButton6.setText("INVENTARIO");
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton7.setText("Generar Entrega");
+        jButton7.setText("REPORTE");
 
         jMenu1.setText("Inicio");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -147,7 +156,7 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Sonografia");
+        jMenu2.setText("Reparaciones");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -170,21 +179,48 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu3.setText("Reportes");
-        jMenu3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jMenu7.setText("Facturaciones");
+        jMenu7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
-        jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem8.setText("Generar");
-        jMenuItem8.addMouseListener(new java.awt.event.MouseAdapter() {
+        jMenuItem18.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem18.setText("Crear Nueva");
+        jMenuItem18.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem8MousePressed(evt);
+                jMenuItem18MousePressed(evt);
             }
         });
-        jMenu3.add(jMenuItem8);
+        jMenu7.add(jMenuItem18);
 
-        jMenuBar1.add(jMenu3);
+        jMenuItem19.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem19.setText("Buscar");
+        jMenuItem19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem19MousePressed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem19);
 
-        jMenu5.setText("Pacientes");
+        jMenuBar1.add(jMenu7);
+
+        jMenu4.setText("Cotizaciones");
+        jMenu4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+
+        jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem6.setText("Crear Nueva");
+        jMenuItem6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem6MousePressed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem6);
+
+        jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem7.setText("Buscar");
+        jMenu4.add(jMenuItem7);
+
+        jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Cliente");
         jMenu5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
         jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -207,44 +243,54 @@ public class Main extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu4.setText("Entregas");
-        jMenu4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jMenu8.setText("Finanzas");
+        jMenu8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
-        jMenuItem6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem6.setText("Crear Nueva");
-        jMenuItem6.addMouseListener(new java.awt.event.MouseAdapter() {
+        jMenuItem20.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem20.setText("Pago Nomina");
+        jMenuItem20.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem6MousePressed(evt);
+                jMenuItem20MousePressed(evt);
             }
         });
-        jMenu4.add(jMenuItem6);
+        jMenu8.add(jMenuItem20);
 
-        jMenuItem7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem7.setText("Buscar");
-        jMenu4.add(jMenuItem7);
+        jMenuItem21.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem21.setText("Cuadre Caja");
+        jMenuItem21.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem21MousePressed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem21);
 
-        jMenuBar1.add(jMenu4);
+        jMenuItem22.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem22.setText("Pago Cliente");
+        jMenuItem22.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem22MousePressed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem22);
+
+        jMenuBar1.add(jMenu8);
+
+        jMenu3.setText("Reportes");
+        jMenu3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+
+        jMenuItem8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem8.setText("Generar");
+        jMenuItem8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem8MousePressed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem8);
+
+        jMenuBar1.add(jMenu3);
 
         jMenu6.setText("Administración");
         jMenu6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-
-        jMenuItem9.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem9.setText("Hospitales");
-        jMenuItem9.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem9MousePressed(evt);
-            }
-        });
-        jMenu6.add(jMenuItem9);
-
-        jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem10.setText("Tipo De Sangre");
-        jMenuItem10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem10MousePressed(evt);
-            }
-        });
-        jMenu6.add(jMenuItem10);
 
         jMenuItem11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem11.setText("Usuarios");
@@ -258,24 +304,6 @@ public class Main extends javax.swing.JFrame {
         });
         jMenu6.add(jMenuItem11);
 
-        jMenuItem15.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem15.setText("Tipo De Sonografia");
-        jMenuItem15.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem15MousePressed(evt);
-            }
-        });
-        jMenu6.add(jMenuItem15);
-
-        jMenuItem14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem14.setText("Precio Sonografia Por Hospital");
-        jMenuItem14.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jMenuItem14MousePressed(evt);
-            }
-        });
-        jMenu6.add(jMenuItem14);
-
         jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
@@ -285,49 +313,46 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(35, 35, 35)
-                .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(47, 47, 47)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(46, 46, 46))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(23, 23, 23)
-                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(31, 31, 31)
-                .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(288, 288, 288))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(230, 230, 230))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(75, 75, 75)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(76, 76, 76)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(112, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(31, 31, 31))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(30, 30, 30)))
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(91, 91, 91))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
@@ -346,27 +371,6 @@ public class Main extends javax.swing.JFrame {
               // usuario.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem11MousePressed
-
-    private void jMenuItem10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem10MousePressed
-        // TODO add your handling code here:
-        if(this.validador.getBtCrearTypoDeSangre()){
-          //JFrameBlood sangre =  new JFrameBlood(this.mysql);
-          //sangre.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
-          //sangre.setVisible(true);
-          
-        }
-    }//GEN-LAST:event_jMenuItem10MousePressed
-
-    private void jMenuItem9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem9MousePressed
-        // TODO add your handling code here:
-        
-        if(this.validador.getBtCrearHospital()){
-            //JFrameHospital hospital =new JFrameHospital(this.mysql);
-            //hospital.setYo(hospital);
-            //hospital.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
-            //hospital.setVisible(true);
-        }
-    }//GEN-LAST:event_jMenuItem9MousePressed
 
     private void jMenuItem4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem4MousePressed
         // TODO add your handling code here:
@@ -387,17 +391,6 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1MousePressed
 
-    private void jMenuItem15MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem15MousePressed
-        // TODO add your handling code here:
-        //permiso
-      
-    }//GEN-LAST:event_jMenuItem15MousePressed
-
-    private void jMenuItem14MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem14MousePressed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jMenuItem14MousePressed
-
     private void jMenuItem12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem12MousePressed
         // TODO add your handling code here:
         System.exit(0);
@@ -405,11 +398,12 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem13MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem13MousePressed
         // TODO add your handling code here:
-         
+        new JFrameCambiarClave(mysql).setVisible(true);
     }//GEN-LAST:event_jMenuItem13MousePressed
 
     private void jMenuItem2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MousePressed
         // TODO add your handling code here:
+        new AboutCreator().setVisible(true);
     }//GEN-LAST:event_jMenuItem2MousePressed
 
     private void jMenuItem5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem5MousePressed
@@ -439,6 +433,26 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem6MousePressed
 
+    private void jMenuItem18MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem18MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem18MousePressed
+
+    private void jMenuItem19MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem19MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem19MousePressed
+
+    private void jMenuItem20MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem20MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem20MousePressed
+
+    private void jMenuItem21MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem21MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem21MousePressed
+
+    private void jMenuItem22MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem22MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem22MousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -459,21 +473,26 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
+    private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
+    private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 }
