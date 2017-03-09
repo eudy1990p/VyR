@@ -5,6 +5,8 @@
  */
 package vyr;
 
+import formularios.splash;
+
 /**
  *
  * @author Eudy
@@ -15,7 +17,8 @@ public class VyR {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+       conexion.Mysql mysql = new conexion.Mysql();
+            new Thread(new splash(mysql)).start();
     }
     
 }
