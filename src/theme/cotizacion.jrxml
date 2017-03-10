@@ -153,11 +153,11 @@
 	<columnFooter>
 		<band height="65" splitType="Stretch">
 			<staticText>
-				<reportElement x="360" y="11" width="83" height="13" uuid="ee199912-49b5-4046-9638-c3f11dd8a09e"/>
+				<reportElement x="360" y="15" width="83" height="13" uuid="ee199912-49b5-4046-9638-c3f11dd8a09e"/>
 				<text><![CDATA[SUB TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="31" width="83" height="13" uuid="8cc800f3-bda9-4459-9c24-06589e77979a"/>
+				<reportElement x="360" y="34" width="83" height="13" uuid="8cc800f3-bda9-4459-9c24-06589e77979a"/>
 				<text><![CDATA[ITBIS]]></text>
 			</staticText>
 			<staticText>
@@ -165,7 +165,7 @@
 				<text><![CDATA[MONTO TOTAL]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="11" width="95" height="13" uuid="0dadafd7-7435-48bf-85b4-b8fc8ef9c670"/>
+				<reportElement x="455" y="15" width="95" height="13" uuid="0dadafd7-7435-48bf-85b4-b8fc8ef9c670"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{sub_total}]]></textFieldExpression>
 			</textField>
@@ -175,7 +175,7 @@
 				<textFieldExpression><![CDATA[$P{monto_total}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="31" width="95" height="13" uuid="83a25017-154b-4b38-837b-f2282caced49"/>
+				<reportElement x="455" y="34" width="95" height="13" uuid="83a25017-154b-4b38-837b-f2282caced49"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$P{itbis}]]></textFieldExpression>
 			</textField>

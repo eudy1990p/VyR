@@ -163,7 +163,7 @@ public class Cotizacion extends javax.swing.JFrame {
             parameters.put("nombre_empresa", "V & R");
             parameters.put("eslogan_empresa", "SERVICIOS DE HERRAMIENTAS");
             parameters.put("fecha", this.obtenerFechaActual());
-            //this.guardarDatos();
+            
             parameters.put("nombre_cliente", "Cliente");
             /*parameters.put("no_factura", this.idFactura);*/
             parameters.put("sub_total","$ "+this.sub_total);
