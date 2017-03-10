@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7de3d777-4df9-46b8-a35b-cecd44702312">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.lang.String"/>
+	<parameter name="no_factura" class="java.lang.String"/>
+	<parameter name="sub_total" class="java.lang.String"/>
+	<parameter name="itbis" class="java.lang.String"/>
+	<parameter name="monto_total" class="java.lang.String"/>
+	<parameter name="nombre_empresa" class="java.lang.String"/>
+	<parameter name="eslogan_empresa" class="java.lang.String"/>
+	<parameter name="logo_empresa" class="java.lang.String"/>
+	<parameter name="nombre_cliente" class="java.lang.String"/>
+	<field name="producto" class="java.lang.String"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="precio" class="java.lang.String"/>
+	<field name="total" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="45" y="12" width="71" height="53" uuid="6af8edfa-bd17-486b-b836-33394752df9b"/>
+				<imageExpression><![CDATA[$P{logo_empresa}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="134" y="17" width="277" height="15" uuid="82242e36-b71e-4b19-976c-90ccbc36bf41"/>
+				<textFieldExpression><![CDATA[$P{nombre_empresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="134" y="32" width="277" height="13" uuid="9f2135ca-0858-440f-896d-695089acee04"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eslogan_empresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="488" y="19" width="65" height="15" uuid="0b942a2f-e84f-4235-b095-3f38456f58a5"/>
+				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="2" width="65" height="15" uuid="64c1ad73-cd2c-42d0-a8c2-260f5eb90bd9"/>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="56" width="61" height="20" uuid="a7a32f43-e209-4403-a573-7a5fbc6111e2"/>
+				<text><![CDATA[No. Factura]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="490" y="56" width="63" height="20" uuid="9ab779d9-177c-410d-848f-a92310c8f8a4"/>
+				<textFieldExpression><![CDATA[$P{no_factura}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="14" width="116" height="20" uuid="7ee6b412-315f-4025-b766-3d61c9a474b1"/>
+				<text><![CDATA[NOMBRE DEL CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="14" width="433" height="20" uuid="810da3a2-eafb-405c-858d-d56697760a6d"/>
+				<textFieldExpression><![CDATA[$P{nombre_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement x="294" y="2" width="45" height="14" uuid="50d91100-e00b-419b-abb9-319e21c456af"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[UNIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="2" width="279" height="14" uuid="06b35027-d8f2-4d98-9b58-5c6497914c9e"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[PRODUCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="2" width="83" height="14" uuid="eb8ca723-ada3-4539-ba6b-9e8a1841eefe"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[PRECIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="2" width="100" height="14" uuid="48fba715-3d5d-4889-885a-9c0ba523b236"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[ TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="0" width="100" height="14" uuid="7f96b778-4624-4f01-b4c0-b56532a3f521"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="83" height="14" uuid="55d5509e-4356-45f0-8d32-4c5cdbdc33e9"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="294" y="0" width="45" height="14" uuid="7bb0671c-eace-46bb-8868-0bdc075059c1"/>
+				<textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="279" height="14" uuid="e8ac4023-6b7f-497b-84de-b541b087ed60"/>
+				<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="360" y="11" width="83" height="13" uuid="ee199912-49b5-4046-9638-c3f11dd8a09e"/>
+				<text><![CDATA[SUB TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="31" width="83" height="13" uuid="8cc800f3-bda9-4459-9c24-06589e77979a"/>
+				<text><![CDATA[ITBIS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="52" width="83" height="13" uuid="e80dd926-e43b-4150-b901-9e08b7d970b9"/>
+				<text><![CDATA[MONTO TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="11" width="100" height="13" uuid="0dadafd7-7435-48bf-85b4-b8fc8ef9c670"/>
+				<textFieldExpression><![CDATA[$P{sub_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="52" width="100" height="13" uuid="99c663b3-e614-40b4-ac81-afb5cd52d2d8"/>
+				<textFieldExpression><![CDATA[$P{monto_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="31" width="100" height="13" uuid="83a25017-154b-4b38-837b-f2282caced49"/>
+				<textFieldExpression><![CDATA[$P{itbis}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<lastPageFooter>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="38" width="553" height="12" uuid="0e02f4dd-1e9f-4a90-96a9-41d16a3963ae"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Para cualquier consulta puede llamar al teléfono (809) 372-3076 o celular (809) 608-5107, puede escribir al email eudy1990@gmail.com ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>
