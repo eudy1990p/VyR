@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import conexion.Mysql;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -43,10 +44,15 @@ public class Cotizacion extends javax.swing.JFrame {
     private String n_producto,p_producto,c_producto,co_producto, sub_total,itbis_total, monto_total;
     private boolean tiene_itbis = false;
     
+    private boolean existe_cliente = false,existe_producto= false,cotizado = false;
+    private Mysql mysql;
+    
+    private String ClienteID="1",UsuarioID="1",CotizacionID="1";
     
     public Cotizacion() {
         initComponents();
         this.limpiarProductoTexto();
+        mysql =new Mysql();       
     }
 
     public void asignarProductoTexto(){
@@ -67,6 +73,35 @@ public class Cotizacion extends javax.swing.JFrame {
         this.t_telefono_cliente.setText(Texto.telefono_cliente);
         this.t_email_cliente.setText(Texto.email_cliente);
 
+    }
+    public void insertarDBDetalleCotizacion(String nombre,String precio,String cantidad,String total){
+            if(!this.existe_producto){
+             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,cotizacion_id";
+             String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.CotizacionID+"'";
+             this.mysql.insertData("cotizacion_detalle", campos, valores);
+            }
+    }
+    public void insertarDBCotizacion(String sub_total,String itbis,String tiene_itbis,String total){
+            String campos = "usuario_id,sub_total,itbis,tiene_itbis,total,fecha_creada,cliente_id";
+             String valores = "'"+this.UsuarioID+"','"+sub_total+"','"+itbis+"','"+tiene_itbis+"','"+total+"',now(),'"+this.ClienteID+"'";
+             this.mysql.insertData("cotizacion", campos, valores);
+             this.CotizacionID = this.mysql.optenerUltimoID("cotizacion");
+    }
+    public void crearCotizacion(){
+           if(!this.cotizado){
+            this.insertarDBCotizacion(this.sub_total, this.itbis_total,"0", this.monto_total);
+            int lineas = this.nombre_producto.size();
+            String nombre,precio,cantidad,total;
+            for(int c = 0 ; c < lineas ; c++){
+                     nombre = this.nombre_producto.get(c);
+                     precio = this.precio_producto.get(c);
+                     cantidad = this.cantidad_producto.get(c);
+                     total = this.sub_total_producto.get(c);
+                 this.insertarDBDetalleCotizacion(nombre, precio, cantidad, total);
+            }
+            this.cotizado = true;
+           }
+           this.generarPDF();
     }
     public void asignarAArrayList(){
  
@@ -161,6 +196,7 @@ public class Cotizacion extends javax.swing.JFrame {
             System.out.println(getClass().getResource("../icono/iconoclinica.gif"));
             parameters.put("logo_empresa", ""+getClass().getResource("../icono/iconoclinica.gif"));
             parameters.put("nombre_empresa", "V & R");
+            parameters.put("no_factura", this.CotizacionID);
             parameters.put("eslogan_empresa", "SERVICIOS DE HERRAMIENTAS");
             parameters.put("fecha", this.obtenerFechaActual());
             
@@ -377,6 +413,11 @@ public class Cotizacion extends javax.swing.JFrame {
         });
 
         jButton3.setText("COTIZAR");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -471,6 +512,11 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.generarPDF();
     }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // TODO add your handling code here:
+        this.crearCotizacion();
+    }//GEN-LAST:event_jButton3MouseClicked
 
     /**
      * @param args the command line arguments

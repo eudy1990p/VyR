@@ -762,4 +762,43 @@ public class Mysql {
             return false;
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    public void insertData(String table_name,String campos, String valores) {
+        try {
+            String sqlInsert = "INSERT INTO " + table_name + "("+campos+")  VALUES("+valores+" )";
+               System.out.println("consulta insert "+sqlInsert);
+            Statement st = Conexion.createStatement();
+            st.executeUpdate(sqlInsert);
+            //JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa");
+         
+        } catch (SQLException ex) {
+            System.out.println(ex.getErrorCode()+" "+ex.getMessage()+" "+ex.getCause());
+            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos");
+        }
+    }
+    public String optenerUltimoID(String table_name) {
+        String id = "1";
+        try {
+            String Query = "SELECT max(id) FROM " + table_name;
+            Statement st = Conexion.createStatement();
+            java.sql.ResultSet resultSet;
+            resultSet = st.executeQuery(Query);
+
+           if (resultSet.next()) {
+                id = resultSet.getString("id");
+                System.out.println("ID: " + resultSet.getString("ID") );
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error en la adquisición de datos getValues(String table_name)");
+        }
+        return id;
+    }
 }
