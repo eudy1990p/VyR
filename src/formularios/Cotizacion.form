@@ -177,6 +177,9 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="t_codigo_cliente">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_codigo_clienteFocusGained"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="t_cedula_cliente">
         </Component>

@@ -786,7 +786,7 @@ public class Mysql {
     public String optenerUltimoID(String table_name) {
         String id = "1";
         try {
-            String Query = "SELECT max(id) FROM " + table_name;
+            String Query = "SELECT max(id) as id FROM " + table_name;
             Statement st = Conexion.createStatement();
             java.sql.ResultSet resultSet;
             resultSet = st.executeQuery(Query);
@@ -800,5 +800,23 @@ public class Mysql {
             JOptionPane.showMessageDialog(null, "Error en la adquisición de datos getValues(String table_name)");
         }
         return id;
+    }
+    public java.sql.ResultSet optenerDatosParaTabla(String table_name, String campos,String otros) {
+     java.sql.ResultSet resultSet = null;
+        try {
+            String Query = "SELECT "+campos+" FROM " + table_name+" "+otros;
+            Statement st = Conexion.createStatement();
+            
+            resultSet = st.executeQuery(Query);
+           /*
+           if (resultSet.next()) {
+                id = resultSet.getString("id");
+                System.out.println("ID: " + resultSet.getString("ID") );
+            }*/
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error en la adquisición de datos getValues(String table_name)");
+        }
+        return resultSet;
     }
 }

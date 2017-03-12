@@ -299,6 +299,12 @@ public class Cotizacion extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("TOTALES");
 
+        t_codigo_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                t_codigo_clienteFocusGained(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -517,6 +523,11 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.crearCotizacion();
     }//GEN-LAST:event_jButton3MouseClicked
+
+    private void t_codigo_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_clienteFocusGained
+        // TODO add your handling code here:
+        SeleccionLista selecciona = new SeleccionLista();
+    }//GEN-LAST:event_t_codigo_clienteFocusGained
 
     /**
      * @param args the command line arguments
