@@ -179,15 +179,32 @@
         <Component class="javax.swing.JTextField" name="t_codigo_cliente">
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_codigo_clienteFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_codigo_clienteFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="t_cedula_cliente">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_cedula_clienteFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_cedula_clienteFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="t_nombre_cliente">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_nombre_clienteFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_nombre_clienteFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="t_telefono_cliente">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_telefono_clienteFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_telefono_clienteFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="t_email_cliente">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_email_clienteFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="t_email_clienteFocusLost"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

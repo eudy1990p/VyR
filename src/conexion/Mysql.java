@@ -805,6 +805,7 @@ public class Mysql {
      java.sql.ResultSet resultSet = null;
         try {
             String Query = "SELECT "+campos+" FROM " + table_name+" "+otros;
+           System.out.print(Query);
             Statement st = Conexion.createStatement();
             
             resultSet = st.executeQuery(Query);

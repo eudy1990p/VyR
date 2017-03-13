@@ -49,12 +49,22 @@ public class Cotizacion extends javax.swing.JFrame {
     
     private String ClienteID="1",UsuarioID="1",CotizacionID="1";
     
+    private Cotizacion ObjectCotizacion;
+    
     public Cotizacion() {
         initComponents();
         this.limpiarProductoTexto();
-        mysql =new Mysql();       
+        mysql =new Mysql();  
     }
-
+    
+    public void setObjectCotizacion(Cotizacion c){
+        this.ObjectCotizacion = c;
+    }
+    public void setDatosCliente(String ClienteID,String nombre,String cedula){
+            this.ClienteID = ClienteID;
+            this.t_nombre_cliente.setText(nombre);
+            this.t_cedula_cliente.setText(cedula);
+    }
     public void asignarProductoTexto(){
         n_producto = this.t_nombre_producto.getText();
         p_producto = this.t_precio_producto.getText();
@@ -200,7 +210,8 @@ public class Cotizacion extends javax.swing.JFrame {
             parameters.put("eslogan_empresa", "SERVICIOS DE HERRAMIENTAS");
             parameters.put("fecha", this.obtenerFechaActual());
             
-            parameters.put("nombre_cliente", "Cliente");
+            parameters.put("numero_cliente", this.ClienteID);
+            parameters.put("nombre_cliente", this.t_nombre_cliente.getText());
             /*parameters.put("no_factura", this.idFactura);*/
             parameters.put("sub_total","$ "+this.sub_total);
             parameters.put("monto_total","$ "+this.monto_total);
@@ -217,12 +228,43 @@ public class Cotizacion extends javax.swing.JFrame {
         }
     }
     
-    
-    
-    
-    
-    
-    
+    public void administrar_focus_clientes(String menu){
+        SeleccionLista selecciona = new SeleccionLista(this.mysql);
+         selecciona.setObjectCotizacion(this.ObjectCotizacion);
+         selecciona.setSeleccionLista(selecciona);
+        switch(menu){
+            case "codigo_cliente":
+                Texto.placeholder(Texto.codigo_cliente,this.t_codigo_cliente.getText(), this.t_codigo_cliente);
+                selecciona.setTextBox(t_codigo_cliente);
+                selecciona.setPalabra("codigo");
+                
+            break;
+            case "cedula_cliente":
+                Texto.placeholder(Texto.cedula_cliente,this.t_cedula_cliente.getText(), this.t_cedula_cliente);
+                selecciona.setTextBox(t_cedula_cliente);
+                selecciona.setPalabra("cedula");
+            break;
+            case "nombre_cliente":
+                Texto.placeholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
+                selecciona.setTextBox(t_nombre_cliente);
+                selecciona.setPalabra("nombre");
+            break;
+            case "telefono_cliente":
+                Texto.placeholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
+                selecciona.setTextBox(t_telefono_cliente);
+                selecciona.setPalabra("telefono");
+                
+            break;
+            case "email_cliente":
+                Texto.placeholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+                selecciona.setTextBox(t_email_cliente);
+                selecciona.setPalabra("email");
+            break;
+        }
+        
+        
+        selecciona.setVisible(true);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -302,6 +344,45 @@ public class Cotizacion extends javax.swing.JFrame {
         t_codigo_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 t_codigo_clienteFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                t_codigo_clienteFocusLost(evt);
+            }
+        });
+
+        t_cedula_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                t_cedula_clienteFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                t_cedula_clienteFocusLost(evt);
+            }
+        });
+
+        t_nombre_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                t_nombre_clienteFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                t_nombre_clienteFocusLost(evt);
+            }
+        });
+
+        t_telefono_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                t_telefono_clienteFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                t_telefono_clienteFocusLost(evt);
+            }
+        });
+
+        t_email_cliente.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                t_email_clienteFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                t_email_clienteFocusLost(evt);
             }
         });
 
@@ -526,8 +607,74 @@ public class Cotizacion extends javax.swing.JFrame {
 
     private void t_codigo_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_clienteFocusGained
         // TODO add your handling code here:
-        SeleccionLista selecciona = new SeleccionLista();
+       /* Texto.placeholder(Texto.codigo_cliente,this.t_codigo_cliente.getText(), this.t_codigo_cliente);
+        SeleccionLista selecciona = new SeleccionLista(this.mysql);
+        selecciona.setObjectCotizacion(this.ObjectCotizacion);
+        selecciona.setTextBox(t_codigo_cliente);
+        selecciona.setPalabra("codigo");
+        selecciona.setVisible(true);*/
+       administrar_focus_clientes("codigo_cliente");
     }//GEN-LAST:event_t_codigo_clienteFocusGained
+
+    private void t_codigo_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_clienteFocusLost
+        // TODO add your handling code here:
+         Texto.setPlaceholder(Texto.codigo_cliente,this.t_codigo_cliente.getText(), this.t_codigo_cliente);
+    
+    }//GEN-LAST:event_t_codigo_clienteFocusLost
+
+    private void t_cedula_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_cedula_clienteFocusGained
+        // TODO add your handling code here:
+       //Texto.placeholder(Texto.cedula_cliente,this.t_cedula_cliente.getText(), this.t_cedula_cliente);
+       administrar_focus_clientes("cedula_cliente");
+    }//GEN-LAST:event_t_cedula_clienteFocusGained
+
+    private void t_cedula_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_cedula_clienteFocusLost
+        // TODO add your handling code here:
+         Texto.setPlaceholder(Texto.cedula_cliente,this.t_cedula_cliente.getText(), this.t_cedula_cliente);
+     
+    }//GEN-LAST:event_t_cedula_clienteFocusLost
+
+    private void t_nombre_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_nombre_clienteFocusGained
+        // TODO add your handling code here:
+       Texto.placeholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
+       //Texto.setPlaceholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
+       administrar_focus_clientes("nombre_cliente");
+    }//GEN-LAST:event_t_nombre_clienteFocusGained
+
+    private void t_nombre_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_nombre_clienteFocusLost
+        // TODO add your handling code here:
+        //Texto.placeholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
+       Texto.setPlaceholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
+   
+    }//GEN-LAST:event_t_nombre_clienteFocusLost
+
+    private void t_telefono_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_telefono_clienteFocusGained
+        // TODO add your handling code here:
+        Texto.placeholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
+       //Texto.setPlaceholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
+       administrar_focus_clientes("telefono_cliente");
+    }//GEN-LAST:event_t_telefono_clienteFocusGained
+
+    private void t_telefono_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_telefono_clienteFocusLost
+        // TODO add your handling code here:
+        //Texto.placeholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
+       Texto.setPlaceholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
+   
+    }//GEN-LAST:event_t_telefono_clienteFocusLost
+
+    private void t_email_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_email_clienteFocusGained
+        // TODO add your handling code here:
+        Texto.placeholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+       //Texto.setPlaceholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+       administrar_focus_clientes("email_cliente");
+    }//GEN-LAST:event_t_email_clienteFocusGained
+
+    private void t_email_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_email_clienteFocusLost
+        // TODO add your handling code here:
+        //Texto.placeholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+       Texto.setPlaceholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+   
+    }//GEN-LAST:event_t_email_clienteFocusLost
 
     /**
      * @param args the command line arguments
@@ -559,7 +706,9 @@ public class Cotizacion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cotizacion().setVisible(true);
+               Cotizacion c = new Cotizacion();
+               c.setObjectCotizacion(c);
+               c.setVisible(true);
             }
         });
     }
