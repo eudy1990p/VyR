@@ -28,6 +28,7 @@ public class SeleccionLista extends javax.swing.JFrame {
     private SeleccionLista seleccionador;
     private javax.swing.JTextField TextBox;
     private String palabra="";
+    private String tablaSeleccionada="",texto="";
     /**
      * Creates new form SeleccionLista
      */
@@ -35,7 +36,35 @@ public class SeleccionLista extends javax.swing.JFrame {
         initComponents();
         this.VistaPrincipal();
         this.mysql = mysql;
-        cargarJTableCliente("","");
+        //cargarJTableCliente("","");
+        this.cargarDBTabla();
+    }
+    public SeleccionLista(Mysql mysql,String tablaSeleccionada) {
+        initComponents();
+        this.VistaPrincipal();
+        this.mysql = mysql;
+        this.tablaSeleccionada = tablaSeleccionada;
+       // cargarJTableCliente("","");
+       this.cargarDBTabla();
+        
+    }
+    public void cargarDBTabla(){
+          if(this.tablaSeleccionada.equals("producto")){
+              cargarJTableProducto(this.palabra, this.jTextField1.getText());
+          }else if(this.tablaSeleccionada.equals("cliente")){
+              cargarJTableCliente(this.palabra, this.jTextField1.getText());
+          }
+    }
+    public void crearNuevoDBTabla(){
+          if(this.tablaSeleccionada.equals("producto")){
+               crearProducto crearCliente = new crearProducto(this.mysql);
+                crearCliente.setClassSeleccionListado(this.seleccionador);
+                crearCliente.setVisible(true);
+          }else if(this.tablaSeleccionada.equals("cliente")){
+              crearCliente crearCliente = new crearCliente(this.mysql);
+                crearCliente.setClassSeleccionListado(this.seleccionador);
+                crearCliente.setVisible(true);
+          }
     }
     public void setSeleccionLista(SeleccionLista seleccionador){
         this.seleccionador = seleccionador;
@@ -81,6 +110,56 @@ public class SeleccionLista extends javax.swing.JFrame {
             this.jButton1.setVisible(false);
         }
     }
+    public void cargarJTableProducto(String menu,String palabra){
+            
+            String[] titulos = {"CODIGO PRODUCTO","NOMBRE PRODUCTO","PRECIO PRODUCTO","CANTIDAD EN ALMASEN "};
+            String table_name = " producto_inventariado ";
+            String campos = "id,nombre,cantidad_comprada,precio_venta";
+            String otros = "";
+            
+           if( (menu.toLowerCase().equals("codigo"))  && (!palabra.isEmpty()) ){
+                otros = " where id = '"+palabra+"' ";
+           }else if((menu.toLowerCase().equals("nombre"))  && (!palabra.isEmpty()) ){
+                otros = " where nombre like '%"+palabra+"%' ";
+           }
+           
+          /* otros = otros+" GROUP by c.id\n" +
+                         " order by e.fecha_creado, t.fecha_creado, d.fecha_creado desc ";
+           */
+           java.sql.ResultSet resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+        try {
+            resultSet.beforeFirst();
+            resultSet.last();
+            this.totalFila  = resultSet.getRow();
+            this.validarAgregarNuevo();
+            Object[][] fila = new Object[this.totalFila][4];
+           String nombre,cantidad,id,precio;
+                    
+            resultSet.beforeFirst();
+            
+            int c = 0;
+            
+            
+            while(resultSet.next()){
+
+                     nombre = Texto.validarNull(resultSet.getString("nombre"));
+                     cantidad = Texto.validarNull(resultSet.getString("cantidad_comprada"));
+                     precio = Texto.validarNull(resultSet.getString("precio_venta"));
+                     id =Texto.validarNull(resultSet.getString("id"));
+                     fila[c][0] = id;
+                     fila[c][1] = nombre;
+                     fila[c][2] = precio;
+                     fila[c][3] = cantidad;
+                     c++;
+                     
+            } 
+             DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
+             this.jTable1.setModel(modelo);
+                    
+        } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
     public void cargarJTableCliente(String menu,String palabra){
             
             String[] titulos = {"CODIGO CLIENTE","NOMBRE CLIENTE","CEDULA CLIENTE","SEXO CLIENTE","TELÉFONO CLIENTE","EMAIL CLIENTE","DIRECCIÓN CLIENTE"};
@@ -92,15 +171,15 @@ public class SeleccionLista extends javax.swing.JFrame {
             String campos = "c.id,p.nombre,p.apellido,p.cedula,p.sexo, e.email, t.telephone, concat('Provincia: ',d.provincia,' Sector: ',d.sector,' Dirección: ',d.localidad) as direccion";
             String otros = "";
             
-           if(menu.toLowerCase().equals("codigo")){
+           if( (menu.toLowerCase().equals("codigo")) && (!palabra.isEmpty()) ){
                 otros = " where c.id = '"+palabra+"' ";
-           }else if(menu.toLowerCase().equals("cedula")){
+           }else if( (menu.toLowerCase().equals("cedula") )  && (!palabra.isEmpty())  ){
                 otros = " where p.cedula like '%"+palabra+"%' ";
-           }else if(menu.toLowerCase().equals("nombre")){
+           }else if( (menu.toLowerCase().equals("nombre") )  && (!palabra.isEmpty()) ){
                 otros = " where concat(p.nombre,' ',p.apellido) like '%"+palabra+"%' ";
-           }else if(menu.toLowerCase().equals("telefono")){
+           }else if( (menu.toLowerCase().equals("telefono") )  && (!palabra.isEmpty()) ){
                 otros = " where t.telephone like '%"+palabra+"%' ";
-           }else if(menu.toLowerCase().equals("email")){
+           }else if((menu.toLowerCase().equals("email"))  && (!palabra.isEmpty()) ){
                 otros = " where e.email like '%"+palabra+"%' ";
            }
            
@@ -123,14 +202,15 @@ public class SeleccionLista extends javax.swing.JFrame {
             
             while(resultSet.next()){
                    
-                    nombre = resultSet.getString("nombre");
-                     apellido = resultSet.getString("apellido");
-                     sexo = resultSet.getString("sexo");
-                     cedula = resultSet.getString("cedula");
-                     id =resultSet.getString("id");
-                     telefono =resultSet.getString("telephone");
-                     email =resultSet.getString("email");
-                     direccion =resultSet.getString("direccion");
+                    nombre =Texto.validarNull( resultSet.getString("nombre") );
+                     apellido = Texto.validarNull(resultSet.getString("apellido"));
+                     sexo = Texto.validarNull(resultSet.getString("sexo"));
+                     cedula = Texto.validarNull( resultSet.getString("cedula") );
+                     
+                     id =Texto.validarNull(resultSet.getString("id"));
+                     telefono =Texto.validarNull(resultSet.getString("telephone"));
+                     email =Texto.validarNull(resultSet.getString("email"));
+                     direccion =Texto.validarNull(resultSet.getString("direccion"));
                      fila[c][0] = id;
                      fila[c][1] = nombre+" "+apellido;
                      fila[c][2] = cedula;
@@ -138,7 +218,7 @@ public class SeleccionLista extends javax.swing.JFrame {
                      fila[c][4] = telefono;
                      fila[c][5] = email;
                      fila[c][6] = direccion;
-                     JOptionPane.showMessageDialog(null, c);
+                     //JOptionPane.showMessageDialog(null, c);
                      c++;
                      
             } 
@@ -229,23 +309,42 @@ public class SeleccionLista extends javax.swing.JFrame {
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         // TODO add your handling code here:
-        this.cargarJTableCliente(this.palabra, this.jTextField1.getText());
+        //this.cargarJTableCliente(this.palabra, this.jTextField1.getText());
+        this.cargarDBTabla();
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        crearCliente crearCliente = new crearCliente(this.mysql);
-        crearCliente.setClassSeleccionListado(this.seleccionador);
-        crearCliente.setVisible(true);
+        
+        crearNuevoDBTabla();
     }//GEN-LAST:event_jButton1MouseClicked
     public void filaSeleccionada(){
-        int fila = this.jTable1.getSelectedRow();
-        String ClienteID = this.jTable1.getValueAt(fila, 0).toString();
-        String nombre = this.jTable1.getValueAt(fila, 1).toString();
-        String cedula = this.jTable1.getValueAt(fila, 2).toString();
-        this.cotizacion.setDatosCliente(ClienteID, nombre, cedula);
-        this.perderFocus();
-        this.dispose();
+         if(this.tablaSeleccionada.equals("producto")){
+                int fila = this.jTable1.getSelectedRow();
+            String productoID = this.jTable1.getValueAt(fila, 0).toString();
+            String nombre = this.jTable1.getValueAt(fila, 1).toString();
+            String precio = this.jTable1.getValueAt(fila, 2).toString();
+            this.cotizacion.setDatosProducto(productoID, nombre, precio,"1");
+            this.perderFocus();
+            this.dispose();
+          }else if(this.tablaSeleccionada.equals("cliente")){
+            try{
+            int fila = this.jTable1.getSelectedRow();
+            
+            String ClienteID = this.jTable1.getValueAt(fila, 0).toString();
+            String nombre = this.jTable1.getValueAt(fila, 1).toString();
+            String cedula = this.jTable1.getValueAt(fila, 2).toString();
+            String telefono = this.jTable1.getValueAt(fila, 4).toString();
+            String email = this.jTable1.getValueAt(fila, 5).toString();
+            
+            this.cotizacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
+            this.perderFocus();
+            this.dispose();
+            }catch(Exception e){
+            System.out.println(e);
+            }
+          }
+        
     }
     /**
      * @param args the command line arguments

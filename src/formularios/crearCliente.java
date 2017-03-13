@@ -123,7 +123,7 @@ public class crearCliente extends javax.swing.JFrame {
            }
            this.insertarDBCliente();
            this.dispose();
-           this.classSeleccionListado.getCotizacion().setDatosCliente(this.clienteID, this.nombre, this.cedula);
+           this.classSeleccionListado.getCotizacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
            this.classSeleccionListado.perderFocus();
            this.classSeleccionListado.dispose();
         }

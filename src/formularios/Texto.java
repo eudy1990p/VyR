@@ -32,4 +32,13 @@ public class Texto {
             t.setText(texto1);
         }
     }
+    public static String validarNull(String t){
+        String dato = " ";
+        if(t == null){
+            dato= " ";
+        }else{
+            dato = t;
+        }
+        return dato;
+    }
 }

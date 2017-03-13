@@ -33,6 +33,7 @@ public class Cotizacion extends javax.swing.JFrame {
     /**
      * Creates new form Cotizacion
      */
+    private ArrayList<String> producto_id = new ArrayList<String>();
     private ArrayList<String> sub_total_producto = new ArrayList<String>();
     private ArrayList<String> codigo_producto = new ArrayList<String>();
     private ArrayList<String> nombre_producto = new ArrayList<String>();
@@ -47,23 +48,35 @@ public class Cotizacion extends javax.swing.JFrame {
     private boolean existe_cliente = false,existe_producto= false,cotizado = false;
     private Mysql mysql;
     
-    private String ClienteID="1",UsuarioID="1",CotizacionID="1";
+    private String ClienteID="1",UsuarioID="1",CotizacionID="1",productoID="1";
     
     private Cotizacion ObjectCotizacion;
     
     public Cotizacion() {
         initComponents();
-        this.limpiarProductoTexto();
+        //this.limpiarProductoTexto();
+        this.limpiarTodoTexto();
         mysql =new Mysql();  
     }
     
     public void setObjectCotizacion(Cotizacion c){
         this.ObjectCotizacion = c;
     }
-    public void setDatosCliente(String ClienteID,String nombre,String cedula){
+    public void setDatosCliente(String ClienteID,String nombre,String cedula,String telefono,String email){
             this.ClienteID = ClienteID;
+            this.t_codigo_cliente.setText(this.ClienteID);
             this.t_nombre_cliente.setText(nombre);
             this.t_cedula_cliente.setText(cedula);
+            this.t_telefono_cliente.setText(telefono);
+            this.t_email_cliente.setText(email);
+    }
+    public void setDatosProducto(String productoID,String nombre,String precio,String cantidad){
+            this.productoID = productoID;
+            this.t_codigo_producto.setText(productoID);
+            this.t_nombre_producto.setText(nombre);
+            this.t_precio_producto.setText(precio);
+            this.t_cantidad_producto.setText(cantidad);
+            
     }
     public void asignarProductoTexto(){
         n_producto = this.t_nombre_producto.getText();
@@ -77,6 +90,19 @@ public class Cotizacion extends javax.swing.JFrame {
         this.t_cantidad_producto.setText(Texto.cantidad_producto);
         this.t_codigo_producto.setText(Texto.codigo_producto);
         
+        //this.t_nombre_cliente.setText(Texto.nombre_cliente);
+        //this.t_cedula_cliente.setText(Texto.cedula_cliente);
+        //this.t_codigo_cliente.setText(Texto.codigo_cliente);
+        //this.t_telefono_cliente.setText(Texto.telefono_cliente);
+        //this.t_email_cliente.setText(Texto.email_cliente);
+
+    }
+    public void limpiarTodoTexto(){
+        this.t_nombre_producto.setText(Texto.nombre_producto);
+        this.t_precio_producto.setText(Texto.precio_producto);
+        this.t_cantidad_producto.setText(Texto.cantidad_producto);
+        this.t_codigo_producto.setText(Texto.codigo_producto);
+        
         this.t_nombre_cliente.setText(Texto.nombre_cliente);
         this.t_cedula_cliente.setText(Texto.cedula_cliente);
         this.t_codigo_cliente.setText(Texto.codigo_cliente);
@@ -84,10 +110,10 @@ public class Cotizacion extends javax.swing.JFrame {
         this.t_email_cliente.setText(Texto.email_cliente);
 
     }
-    public void insertarDBDetalleCotizacion(String nombre,String precio,String cantidad,String total){
+    public void insertarDBDetalleCotizacion(String id,String nombre,String precio,String cantidad,String total){
             if(!this.existe_producto){
-             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,cotizacion_id";
-             String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.CotizacionID+"'";
+             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,cotizacion_id,producto_inventariado_id";
+             String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.CotizacionID+"','"+id+"'";
              this.mysql.insertData("cotizacion_detalle", campos, valores);
             }
     }
@@ -101,20 +127,21 @@ public class Cotizacion extends javax.swing.JFrame {
            if(!this.cotizado){
             this.insertarDBCotizacion(this.sub_total, this.itbis_total,"0", this.monto_total);
             int lineas = this.nombre_producto.size();
-            String nombre,precio,cantidad,total;
+            String nombre,precio,cantidad,total,id;
             for(int c = 0 ; c < lineas ; c++){
                      nombre = this.nombre_producto.get(c);
                      precio = this.precio_producto.get(c);
                      cantidad = this.cantidad_producto.get(c);
                      total = this.sub_total_producto.get(c);
-                 this.insertarDBDetalleCotizacion(nombre, precio, cantidad, total);
+                     id = this.producto_id.get(c);
+                 this.insertarDBDetalleCotizacion(id,nombre, precio, cantidad, total);
             }
             this.cotizado = true;
            }
            this.generarPDF();
     }
     public void asignarAArrayList(){
- 
+        this.producto_id.add(this.productoID);
         this.cantidad_producto.add(this.c_producto);
         this.nombre_producto.add(this.n_producto);
         this.precio_producto.add(""+this.p_producto);
@@ -153,24 +180,26 @@ public class Cotizacion extends javax.swing.JFrame {
         this.cotizacion_monto_total.setText("$ "+this.monto_total);
     }
     public void cargarJTable(){
-           String[] titulos = {"PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL"};
+           String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL"};
            int lineas = this.nombre_producto.size();
-           String nombre,precio,cantidad,total;
+           String nombre,precio,cantidad,total,id;
            
            this.productos  = new LinkedList();
            
-           Object[][] fila = new Object[lineas][4];
+           Object[][] fila = new Object[lineas][5];
            
            for(int c = 0 ; c < lineas ; c++){
+                    id = this.codigo_producto.get(c);
                     nombre = this.nombre_producto.get(c);
                     precio = this.precio_producto.get(c);
                     cantidad = this.cantidad_producto.get(c);
                     total = this.sub_total_producto.get(c);
                     
-                    fila[c][0] = nombre;
-                    fila[c][1] = cantidad;
-                    fila[c][2] = precio;
-                    fila[c][3] = total;
+                    fila[c][0] = id;
+                    fila[c][1] = nombre;
+                    fila[c][2] = cantidad;
+                    fila[c][3] = precio;
+                    fila[c][4] = total;
                     
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
@@ -228,11 +257,12 @@ public class Cotizacion extends javax.swing.JFrame {
         }
     }
     
-    public void administrar_focus_clientes(String menu){
-        SeleccionLista selecciona = new SeleccionLista(this.mysql);
+    public void administrar_focus_clientes(String menu,String tabla){
+        SeleccionLista selecciona = new SeleccionLista(this.mysql,tabla);
          selecciona.setObjectCotizacion(this.ObjectCotizacion);
          selecciona.setSeleccionLista(selecciona);
-        switch(menu){
+        //JOptionPane.showMessageDialog(null, menu+" "+tabla);
+         switch(menu){
             case "codigo_cliente":
                 Texto.placeholder(Texto.codigo_cliente,this.t_codigo_cliente.getText(), this.t_codigo_cliente);
                 selecciona.setTextBox(t_codigo_cliente);
@@ -259,6 +289,19 @@ public class Cotizacion extends javax.swing.JFrame {
                 Texto.placeholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
                 selecciona.setTextBox(t_email_cliente);
                 selecciona.setPalabra("email");
+            break;
+            
+            case "codigo_producto":
+                
+                Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
+                selecciona.setTextBox(t_codigo_producto);
+                selecciona.setPalabra("codigo");
+            break;
+            case "nombre_producto":
+                Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
+                //Texto.setPlaceholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
+                selecciona.setTextBox(t_nombre_producto);
+                selecciona.setPalabra("nombre");
             break;
         }
         
@@ -557,7 +600,9 @@ public class Cotizacion extends javax.swing.JFrame {
 
     private void t_codigo_productoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_productoFocusGained
         // TODO add your handling code here:
-        Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
+        //Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
+               administrar_focus_clientes("codigo_producto","producto");
+
     }//GEN-LAST:event_t_codigo_productoFocusGained
 
     private void t_codigo_productoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_productoFocusLost
@@ -567,7 +612,9 @@ public class Cotizacion extends javax.swing.JFrame {
 
     private void t_nombre_productoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_nombre_productoFocusGained
         // TODO add your handling code here:
-        Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
+        //Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
+        administrar_focus_clientes("nombre_producto","producto");
+
     }//GEN-LAST:event_t_nombre_productoFocusGained
 
     private void t_nombre_productoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_nombre_productoFocusLost
@@ -613,7 +660,7 @@ public class Cotizacion extends javax.swing.JFrame {
         selecciona.setTextBox(t_codigo_cliente);
         selecciona.setPalabra("codigo");
         selecciona.setVisible(true);*/
-       administrar_focus_clientes("codigo_cliente");
+       administrar_focus_clientes("codigo_cliente","cliente");
     }//GEN-LAST:event_t_codigo_clienteFocusGained
 
     private void t_codigo_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_clienteFocusLost
@@ -625,7 +672,7 @@ public class Cotizacion extends javax.swing.JFrame {
     private void t_cedula_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_cedula_clienteFocusGained
         // TODO add your handling code here:
        //Texto.placeholder(Texto.cedula_cliente,this.t_cedula_cliente.getText(), this.t_cedula_cliente);
-       administrar_focus_clientes("cedula_cliente");
+       administrar_focus_clientes("cedula_cliente","cliente");
     }//GEN-LAST:event_t_cedula_clienteFocusGained
 
     private void t_cedula_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_cedula_clienteFocusLost
@@ -638,7 +685,7 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
        Texto.placeholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
        //Texto.setPlaceholder(Texto.nombre_cliente,this.t_nombre_cliente.getText(), this.t_nombre_cliente);
-       administrar_focus_clientes("nombre_cliente");
+       administrar_focus_clientes("nombre_cliente","cliente");
     }//GEN-LAST:event_t_nombre_clienteFocusGained
 
     private void t_nombre_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_nombre_clienteFocusLost
@@ -652,7 +699,7 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         Texto.placeholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
        //Texto.setPlaceholder(Texto.telefono_cliente,this.t_telefono_cliente.getText(), this.t_telefono_cliente);
-       administrar_focus_clientes("telefono_cliente");
+       administrar_focus_clientes("telefono_cliente","cliente");
     }//GEN-LAST:event_t_telefono_clienteFocusGained
 
     private void t_telefono_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_telefono_clienteFocusLost
@@ -666,7 +713,7 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         Texto.placeholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
        //Texto.setPlaceholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
-       administrar_focus_clientes("email_cliente");
+       administrar_focus_clientes("email_cliente","cliente");
     }//GEN-LAST:event_t_email_clienteFocusGained
 
     private void t_email_clienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_email_clienteFocusLost
