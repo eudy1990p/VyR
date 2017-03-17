@@ -122,10 +122,18 @@ public class crearProducto extends javax.swing.JFrame {
            }
            this.insertarDBProducto();
            
-           this.dispose();
-           this.classSeleccionListado.getCotizacion().setDatosProducto(this.productoID, this.nombre, this.precioVenta,this.cantidadVendida);
-           this.classSeleccionListado.perderFocus();
-           this.classSeleccionListado.dispose();
+           if(this.classSeleccionListado.getCotizacion() != null){
+                this.dispose();
+                this.classSeleccionListado.getCotizacion().setDatosProducto(this.productoID, this.nombre, this.precioVenta,this.cantidadVendida);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
+           if(this.classSeleccionListado.getFacturacion() != null){
+                this.dispose();
+                this.classSeleccionListado.getFacturacion().setDatosProducto(this.productoID, this.nombre, this.precioVenta,this.cantidadVendida);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
         }
     }
     /**

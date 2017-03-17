@@ -22,11 +22,15 @@ public class crearCliente extends javax.swing.JFrame {
     private String nombre="",apellido,sexo,rnc,fechaNacimiento,cedula,email,telefono,provincia,sector,direccion;
     private String personaID="1",usuarioID="1",clienteID="1";
     private SeleccionLista classSeleccionListado;
+    private String trabajandoClase = "contizacion";
             
     public crearCliente(Mysql mysql) {
         initComponents();
         this.mysql = mysql;
         this.mostrarOpciones();
+    }
+    public void setTrabajandoClase(String clase){
+        this.trabajandoClase = clase ;
     }
     public void setClassSeleccionListado(SeleccionLista classSeleccionListado){
         this.classSeleccionListado =classSeleccionListado;
@@ -121,11 +125,22 @@ public class crearCliente extends javax.swing.JFrame {
            if( (!this.sector.isEmpty()) || (!this.provincia.isEmpty()) || (!this.direccion.isEmpty()) ){
                this.insertarDBDireccion();
            }
-           this.insertarDBCliente();
-           this.dispose();
-           this.classSeleccionListado.getCotizacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
-           this.classSeleccionListado.perderFocus();
-           this.classSeleccionListado.dispose();
+           if(this.classSeleccionListado.getCotizacion() != null){
+                this.insertarDBCliente();
+                this.dispose();
+                this.classSeleccionListado.getCotizacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
+           
+           if(this.classSeleccionListado.getFacturacion() != null){
+                this.insertarDBCliente();
+                this.dispose();
+                this.classSeleccionListado.getFacturacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
+                 this.classSeleccionListado.getFacturacion().setRNCCliente(rnc);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
         }
     }
     /**

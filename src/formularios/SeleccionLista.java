@@ -20,15 +20,25 @@ import javax.swing.table.DefaultTableModel;
 public class SeleccionLista extends javax.swing.JFrame {
     private Mysql mysql;
     private int totalFila;
-    private Cotizacion cotizacion;
+    private Cotizacion cotizacion = null;
+    private Facturacion facturacion = null;
+
 
     public Cotizacion getCotizacion() {
         return cotizacion;
+    }
+    public Facturacion getFacturacion() {
+        return facturacion;
     }
     private SeleccionLista seleccionador;
     private javax.swing.JTextField TextBox;
     private String palabra="";
     private String tablaSeleccionada="",texto="";
+    private String claseManejando ="cotizacion";
+
+    public void setClaseManejando(String claseManejando) {
+        this.claseManejando = claseManejando;
+    }
     /**
      * Creates new form SeleccionLista
      */
@@ -62,8 +72,8 @@ public class SeleccionLista extends javax.swing.JFrame {
                 crearCliente.setVisible(true);
           }else if(this.tablaSeleccionada.equals("cliente")){
               crearCliente crearCliente = new crearCliente(this.mysql);
-                crearCliente.setClassSeleccionListado(this.seleccionador);
-                crearCliente.setVisible(true);
+              crearCliente.setClassSeleccionListado(this.seleccionador);
+              crearCliente.setVisible(true);
           }
     }
     public void setSeleccionLista(SeleccionLista seleccionador){
@@ -95,6 +105,9 @@ public class SeleccionLista extends javax.swing.JFrame {
     
     public void setObjectCotizacion(Cotizacion cotizacion){
        this.cotizacion = cotizacion;
+    }
+    public void setObjectFacturacion(Facturacion facturacion){
+       this.facturacion = facturacion;
     }
     public void setTextBox(javax.swing.JTextField TextBox){
        this.TextBox = TextBox;
@@ -162,13 +175,13 @@ public class SeleccionLista extends javax.swing.JFrame {
     }
     public void cargarJTableCliente(String menu,String palabra){
             
-            String[] titulos = {"CODIGO CLIENTE","NOMBRE CLIENTE","CEDULA CLIENTE","SEXO CLIENTE","TELÉFONO CLIENTE","EMAIL CLIENTE","DIRECCIÓN CLIENTE"};
+            String[] titulos = {"CODIGO CLIENTE","NOMBRE CLIENTE","CEDULA CLIENTE","SEXO CLIENTE","TELÉFONO CLIENTE","EMAIL CLIENTE","DIRECCIÓN CLIENTE","RNC CLIENTE"};
             //SELECT * FROM persona as p inner join cliente as c on p.id = c.persona_id
             String table_name = " persona as p inner join cliente as c on p.id = c.persona_id"
                     + " left join email as e on p.id = e.persona_id\n" +
                     " left join telephone as t on p.id = t.persona_id\n" +
                     " left join direccion as d on p.id = d.persona_id ";
-            String campos = "c.id,p.nombre,p.apellido,p.cedula,p.sexo, e.email, t.telephone, concat('Provincia: ',d.provincia,' Sector: ',d.sector,' Dirección: ',d.localidad) as direccion";
+            String campos = "c.id,p.rnc,p.nombre,p.apellido,p.cedula,p.sexo, e.email, t.telephone, concat('Provincia: ',d.provincia,' Sector: ',d.sector,' Dirección: ',d.localidad) as direccion";
             String otros = "";
             
            if( (menu.toLowerCase().equals("codigo")) && (!palabra.isEmpty()) ){
@@ -192,8 +205,8 @@ public class SeleccionLista extends javax.swing.JFrame {
             resultSet.last();
             this.totalFila  = resultSet.getRow();
             this.validarAgregarNuevo();
-            Object[][] fila = new Object[this.totalFila][7];
-           String nombre,apellido,sexo,cedula,id,telefono,email,direccion;
+            Object[][] fila = new Object[this.totalFila][8];
+           String nombre,apellido,sexo,cedula,id,telefono,email,direccion,rnc;
                     
             resultSet.beforeFirst();
             
@@ -211,6 +224,7 @@ public class SeleccionLista extends javax.swing.JFrame {
                      telefono =Texto.validarNull(resultSet.getString("telephone"));
                      email =Texto.validarNull(resultSet.getString("email"));
                      direccion =Texto.validarNull(resultSet.getString("direccion"));
+                     rnc =Texto.validarNull(resultSet.getString("rnc"));
                      fila[c][0] = id;
                      fila[c][1] = nombre+" "+apellido;
                      fila[c][2] = cedula;
@@ -218,6 +232,7 @@ public class SeleccionLista extends javax.swing.JFrame {
                      fila[c][4] = telefono;
                      fila[c][5] = email;
                      fila[c][6] = direccion;
+                     fila[c][7] = rnc;
                      //JOptionPane.showMessageDialog(null, c);
                      c++;
                      
@@ -324,7 +339,12 @@ public class SeleccionLista extends javax.swing.JFrame {
             String productoID = this.jTable1.getValueAt(fila, 0).toString();
             String nombre = this.jTable1.getValueAt(fila, 1).toString();
             String precio = this.jTable1.getValueAt(fila, 2).toString();
+            if(this.cotizacion != null){
             this.cotizacion.setDatosProducto(productoID, nombre, precio,"1");
+            }
+            if(this.facturacion != null){
+            this.facturacion.setDatosProducto(productoID, nombre, precio,"1");
+            }
             this.perderFocus();
             this.dispose();
           }else if(this.tablaSeleccionada.equals("cliente")){
@@ -336,8 +356,15 @@ public class SeleccionLista extends javax.swing.JFrame {
             String cedula = this.jTable1.getValueAt(fila, 2).toString();
             String telefono = this.jTable1.getValueAt(fila, 4).toString();
             String email = this.jTable1.getValueAt(fila, 5).toString();
-            
+            String rnc = this.jTable1.getValueAt(fila, 6).toString();
+
+             if(this.cotizacion != null){
             this.cotizacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
+             }
+             if(this.facturacion != null){
+              this.facturacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
+              this.facturacion.setRNCCliente(rnc);
+             }
             this.perderFocus();
             this.dispose();
             }catch(Exception e){

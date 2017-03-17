@@ -28,10 +28,10 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author Eudy
  */
-public class Cotizacion extends javax.swing.JFrame {
+public class Facturacion extends javax.swing.JFrame {
 
     /**
-     * Creates new form Cotizacion
+     * Creates new form Facturacion
      */
     private ArrayList<String> producto_id = new ArrayList<String>();
     private ArrayList<String> sub_total_producto = new ArrayList<String>();
@@ -43,24 +43,28 @@ public class Cotizacion extends javax.swing.JFrame {
     private List productos;
     
     private String n_producto,p_producto,c_producto,co_producto, sub_total,itbis_total, monto_total;
-    private boolean tiene_itbis = false;
+    private boolean tiene_itbis = false,factura_generada = false;
     
     private boolean existe_cliente = false,existe_producto= false,cotizado = false,no_agrego_producto = true,no_agrego_cliente = true;
     private Mysql mysql;
     
-    private String ClienteID="1",UsuarioID="1",CotizacionID="1",productoID="1";
+    private String rnc_cliente="";
     
-    private Cotizacion ObjectCotizacion;
+    private String ClienteID="1",UsuarioID="1",FacturacionID="1",productoID="1";
     
-    public Cotizacion() {
+    private String NCF = "",notaFactura="";
+    
+    private Facturacion ObjectFacturacion;
+    
+    public Facturacion() {
         initComponents();
         //this.limpiarProductoTexto();
         this.limpiarTodoTexto();
         mysql =new Mysql();  
     }
     
-    public void setObjectCotizacion(Cotizacion c){
-        this.ObjectCotizacion = c;
+    public void setObjectFacturacion(Facturacion c){
+        this.ObjectFacturacion = c;
     }
     public void setDatosCliente(String ClienteID,String nombre,String cedula,String telefono,String email){
             this.ClienteID = ClienteID;
@@ -70,6 +74,9 @@ public class Cotizacion extends javax.swing.JFrame {
             this.t_telefono_cliente.setText(telefono);
             this.t_email_cliente.setText(email);
             this.no_agrego_cliente = false;
+    }
+    public void setRNCCliente(String rnc){
+        this.rnc_cliente = rnc;
     }
     public void setDatosProducto(String productoID,String nombre,String precio,String cantidad){
             this.productoID = productoID;
@@ -111,22 +118,22 @@ public class Cotizacion extends javax.swing.JFrame {
         this.t_email_cliente.setText(Texto.email_cliente);
 
     }
-    public void insertarDBDetalleCotizacion(String id,String nombre,String precio,String cantidad,String total){
+    public void insertarDBDetalleFacturacion(String id,String nombre,String precio,String cantidad,String total){
             if(!this.existe_producto){
-             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,cotizacion_id,producto_inventariado_id";
-             String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.CotizacionID+"','"+id+"'";
-             this.mysql.insertData("cotizacion_detalle", campos, valores);
+             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,Facturacion_id,producto_inventariado_id";
+             String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.FacturacionID+"','"+id+"'";
+             this.mysql.insertData("Facturacion_detalle", campos, valores);
             }
     }
-    public void insertarDBCotizacion(String sub_total,String itbis,String tiene_itbis,String total){
+    public void insertarDBFacturacion(String sub_total,String itbis,String tiene_itbis,String total){
             String campos = "usuario_id,sub_total,itbis,tiene_itbis,total,fecha_creada,cliente_id";
              String valores = "'"+this.UsuarioID+"','"+sub_total+"','"+itbis+"','"+tiene_itbis+"','"+total+"',now(),'"+this.ClienteID+"'";
-             this.mysql.insertData("cotizacion", campos, valores);
-             this.CotizacionID = this.mysql.optenerUltimoID("cotizacion");
+             this.mysql.insertData("Facturacion", campos, valores);
+             this.FacturacionID = this.mysql.optenerUltimoID("Facturacion");
     }
-    public void crearCotizacion(){
+    public void crearFacturacion(){
            if(!this.cotizado){
-            this.insertarDBCotizacion(this.sub_total, this.itbis_total,"0", this.monto_total);
+            this.insertarDBFacturacion(this.sub_total, this.itbis_total,"0", this.monto_total);
             int lineas = this.nombre_producto.size();
             String nombre,precio,cantidad,total,id;
             for(int c = 0 ; c < lineas ; c++){
@@ -135,7 +142,7 @@ public class Cotizacion extends javax.swing.JFrame {
                      cantidad = this.cantidad_producto.get(c);
                      total = this.sub_total_producto.get(c);
                      id = this.producto_id.get(c);
-                 this.insertarDBDetalleCotizacion(id,nombre, precio, cantidad, total);
+                 this.insertarDBDetalleFacturacion(id,nombre, precio, cantidad, total);
             }
             this.cotizado = true;
            }
@@ -167,10 +174,15 @@ public class Cotizacion extends javax.swing.JFrame {
         Texto.placeholder(Texto.precio_producto,this.t_precio_producto.getText(), this.t_precio_producto);
         Texto.placeholder(Texto.cantidad_producto,this.t_cantidad_producto.getText(), this.t_cantidad_producto);
     }
+    public void tieneITBIS(){
+        if(this.JCBTieneITBIS.isSelected()){
+            this.tiene_itbis = true;
+        }
+    }
     public void totales(double monto){
         double itbis = 0,monto_total = 0;
         this.sub_total = ""+monto;
-        
+        this.tieneITBIS();
         if(this.tiene_itbis){
             itbis = monto * 0.18; 
         }
@@ -231,16 +243,21 @@ public class Cotizacion extends javax.swing.JFrame {
    }
     public void generarPDF(){
         try {
-            JasperReport loadObject = (JasperReport) JRLoader.loadObject(Cotizacion.class.getResource("../theme/cotizacion.jasper"));
+            JasperReport loadObject = (JasperReport) JRLoader.loadObject(Facturacion.class.getResource("../theme/facturacion.jasper"));
             Map parameters = new HashMap<String, Object>();
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(productos); 
             System.out.println(getClass().getResource("../icono/iconoclinica.gif"));
             parameters.put("logo_empresa", ""+getClass().getResource("../icono/iconoclinica.gif"));
             parameters.put("nombre_empresa", "V & R");
-            parameters.put("no_factura", this.CotizacionID);
+            parameters.put("ncf_empresa", this.NCF);
+            parameters.put("rnc_empresa", "10001000");
+
+            parameters.put("no_factura", this.FacturacionID);
             parameters.put("eslogan_empresa", "SERVICIOS DE HERRAMIENTAS");
             parameters.put("fecha", this.obtenerFechaActual());
             
+            
+            parameters.put("rnc_cliente", this.rnc_cliente);
             parameters.put("numero_cliente", this.ClienteID);
             parameters.put("nombre_cliente", this.t_nombre_cliente.getText());
             /*parameters.put("no_factura", this.idFactura);*/
@@ -255,13 +272,14 @@ public class Cotizacion extends javax.swing.JFrame {
             jv.setVisible(true);
                     
         } catch (JRException ex) {
-            Logger.getLogger(Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Facturacion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public void administrar_focus_clientes(String menu,String tabla){
         SeleccionLista selecciona = new SeleccionLista(this.mysql,tabla);
-         selecciona.setObjectCotizacion(this.ObjectCotizacion);
+         selecciona.setObjectFacturacion(this.ObjectFacturacion);
+        
          selecciona.setSeleccionLista(selecciona);
         //JOptionPane.showMessageDialog(null, menu+" "+tabla);
          switch(menu){
@@ -353,6 +371,13 @@ public class Cotizacion extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        JCBTieneITBIS = new javax.swing.JCheckBox();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -558,10 +583,49 @@ public class Cotizacion extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("COTIZAR");
+        jButton3.setText("Facturar");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton3MouseClicked(evt);
+            }
+        });
+
+        jButton4.setText("Pagar");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("COTIZACIONES O REPARACIONES DEL CLIENTE");
+
+        JCBTieneITBIS.setText("Tiene ITBIS?");
+
+        jButton5.setText("Agregar Nota");
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
+
+        jButton6.setText("Agregar NCF");
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton6MouseClicked(evt);
             }
         });
 
@@ -571,38 +635,61 @@ public class Cotizacion extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(JCBTieneITBIS, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(67, 67, 67)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton2)
+                    .addComponent(jButton4)
+                    .addComponent(JCBTieneITBIS)
+                    .addComponent(jButton5)
+                    .addComponent(jButton6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -669,7 +756,8 @@ public class Cotizacion extends javax.swing.JFrame {
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         // TODO add your handling code here:
         if(this.validarQueTengaUnoSeleccionado()){
-            this.crearCotizacion();
+            this.crearFacturacion();
+            this.factura_generada = true;
         }
     }//GEN-LAST:event_jButton3MouseClicked
 
@@ -677,7 +765,7 @@ public class Cotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
        /* Texto.placeholder(Texto.codigo_cliente,this.t_codigo_cliente.getText(), this.t_codigo_cliente);
         SeleccionLista selecciona = new SeleccionLista(this.mysql);
-        selecciona.setObjectCotizacion(this.ObjectCotizacion);
+        selecciona.setObjectFacturacion(this.ObjectFacturacion);
         selecciona.setTextBox(t_codigo_cliente);
         selecciona.setPalabra("codigo");
         selecciona.setVisible(true);*/
@@ -744,6 +832,26 @@ public class Cotizacion extends javax.swing.JFrame {
    
     }//GEN-LAST:event_t_email_clienteFocusLost
 
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+        // TODO add your handling code here:
+       this.NCF = JOptionPane.showInputDialog(null, "Ingrese su NCF (Número de Comprobante Fiscal)", "NCF (Número de Comprobante Fiscal)", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButton6MouseClicked
+
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        // TODO add your handling code here:
+       this.notaFactura = JOptionPane.showInputDialog(null, "Ingrese su Nota", "Agregar Nota a la Factura", JOptionPane.INFORMATION_MESSAGE);
+       
+    }//GEN-LAST:event_jButton5MouseClicked
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+        // TODO add your handling code here:
+        if(this.factura_generada){
+            
+        }else{
+            JOptionPane.showMessageDialog(null, "Debe generar la factura antes de pagarla", "Advertencia ", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton4MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -761,42 +869,49 @@ public class Cotizacion extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Cotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Facturacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Cotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Facturacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Cotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Facturacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Cotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Facturacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               Cotizacion c = new Cotizacion();
-               c.setObjectCotizacion(c);
+               Facturacion c = new Facturacion();
+               c.setObjectFacturacion(c);
                c.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox JCBTieneITBIS;
     private javax.swing.JLabel cotizacion_itbis_total;
     private javax.swing.JLabel cotizacion_monto_total;
     private javax.swing.JLabel cotizacion_sub_total;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField t_cantidad_producto;
     private javax.swing.JTextField t_cedula_cliente;
     private javax.swing.JTextField t_codigo_cliente;
