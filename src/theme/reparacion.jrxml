@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7de3d777-4df9-46b8-a35b-cecd44702312">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="78"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="fecha" class="java.lang.String"/>
 	<parameter name="no_factura" class="java.lang.String"/>
@@ -17,8 +17,8 @@
 	<parameter name="ncf_empresa" class="java.lang.String"/>
 	<parameter name="rnc_empresa" class="java.lang.String"/>
 	<parameter name="telefono_empresa" class="java.lang.String"/>
-	<parameter name="email_empresa" class="java.lang.String"/>
 	<parameter name="celular_empresa" class="java.lang.String"/>
+	<parameter name="email_empresa" class="java.lang.String"/>
 	<field name="producto" class="java.lang.String"/>
 	<field name="unidad" class="java.lang.String"/>
 	<field name="precio" class="java.lang.String"/>
@@ -56,7 +56,7 @@
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="56" width="72" height="20" uuid="a7a32f43-e209-4403-a573-7a5fbc6111e2"/>
-				<text><![CDATA[No. Factura]]></text>
+				<text><![CDATA[No. Reparación]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="526" y="56" width="27" height="20" uuid="9ab779d9-177c-410d-848f-a92310c8f8a4"/>
@@ -70,49 +70,33 @@
 				<reportElement x="476" y="0" width="78" height="15" uuid="1d855064-250c-49b1-b89a-6515157fd923"/>
 				<textFieldExpression><![CDATA[$P{rnc_empresa}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="476" y="31" width="78" height="15" uuid="ec9bd13b-042f-488b-8a12-1ca60273d3d0"/>
-				<textFieldExpression><![CDATA[$P{ncf_empresa}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="446" y="31" width="29" height="15" uuid="ea84848d-5016-4c52-8ee8-e5242e975ecf"/>
-				<text><![CDATA[NCF]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="225" y="62" width="70" height="17" uuid="900527d6-9721-4aa0-b7fd-f8f323b2bddd"/>
+				<reportElement x="231" y="62" width="90" height="17" uuid="900527d6-9721-4aa0-b7fd-f8f323b2bddd"/>
 				<textElement>
 					<font size="13" isBold="true"/>
 				</textElement>
-				<text><![CDATA[FACTURA]]></text>
+				<text><![CDATA[REPARACIÓN]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="48" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="31" width="116" height="13" uuid="7ee6b412-315f-4025-b766-3d61c9a474b1"/>
+				<reportElement x="0" y="23" width="116" height="13" uuid="7ee6b412-315f-4025-b766-3d61c9a474b1"/>
 				<text><![CDATA[NOMBRE DEL CLIENTE]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="31" width="219" height="13" uuid="810da3a2-eafb-405c-858d-d56697760a6d"/>
+				<reportElement x="120" y="23" width="219" height="13" uuid="810da3a2-eafb-405c-858d-d56697760a6d"/>
 				<textFieldExpression><![CDATA[$P{nombre_cliente}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="16" width="116" height="13" uuid="08ca5317-8eec-4723-9c8f-865a22d90bfc"/>
+				<reportElement x="0" y="3" width="116" height="13" uuid="08ca5317-8eec-4723-9c8f-865a22d90bfc"/>
 				<text><![CDATA[CLIENTE ID]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="16" width="94" height="13" uuid="28618c30-d0a9-47f2-b721-fd1e5a86a6f9"/>
+				<reportElement x="120" y="3" width="94" height="13" uuid="28618c30-d0a9-47f2-b721-fd1e5a86a6f9"/>
 				<textFieldExpression><![CDATA[$P{numero_cliente}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="1" width="94" height="13" uuid="3c76b7e1-f529-41b8-9b9b-bbed2e877b45"/>
-				<textFieldExpression><![CDATA[$P{rnc_cliente}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="1" width="116" height="13" uuid="43f575be-b5e1-49c0-a688-c8a5d26c8370"/>
-				<text><![CDATA[CLIENTE RNC]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -228,7 +212,7 @@
 				<text><![CDATA[Sistema creado por: Eudy Arias  Tel : (809) 372-3076, Cel: (809) 608-5107, Email: eudy1990@gmail.com ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="1" y="25" width="553" height="12" uuid="80e5ce49-b35f-42d5-8db9-70dd9423a556"/>
+				<reportElement x="1" y="26" width="553" height="12" uuid="8551db43-5990-43a4-839a-69d5093c73e8"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="8"/>
 				</textElement>

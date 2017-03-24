@@ -6,6 +6,7 @@
 package formularios;
 
 import conexion.Mysql;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,11 +40,20 @@ public class Facturacion extends javax.swing.JFrame {
     private ArrayList<String> nombre_producto = new ArrayList<String>();
     private ArrayList<String> precio_producto = new ArrayList<String>();
     private ArrayList<String> cantidad_producto = new ArrayList<String>();
+        private double montoTotal = 0.00,subMontoTotal = 0.00,itbisTotal = 0.00;
 
+    public void resetArrayList(){
+        this.producto_id = new ArrayList<String>();
+        this.sub_total_producto = new ArrayList<String>();
+        this.codigo_producto = new ArrayList<String>();
+        this.nombre_producto = new ArrayList<String>();
+        this.precio_producto = new ArrayList<String>();
+        this.cantidad_producto = new ArrayList<String>();
+    }
     private List productos;
     
     private String n_producto,p_producto,c_producto,co_producto, sub_total,itbis_total, monto_total;
-    private boolean tiene_itbis = false,factura_generada = false;
+    private boolean tiene_itbis = false,factura_generada = false,deuda = false;
     
     private boolean existe_cliente = false,existe_producto= false,cotizado = false,no_agrego_producto = true,no_agrego_cliente = true;
     private Mysql mysql;
@@ -60,7 +70,10 @@ public class Facturacion extends javax.swing.JFrame {
         initComponents();
         //this.limpiarProductoTexto();
         this.limpiarTodoTexto();
-        mysql =new Mysql();  
+        mysql =new Mysql();
+        this.jTDeuda.setVisible(false);
+        this.jTReparacion.setVisible(false);
+        this.jTCotizacion.setVisible(false);
     }
     
     public void setObjectFacturacion(Facturacion c){
@@ -74,6 +87,9 @@ public class Facturacion extends javax.swing.JFrame {
             this.t_telefono_cliente.setText(telefono);
             this.t_email_cliente.setText(email);
             this.no_agrego_cliente = false;
+            this.optenerCotizacionPendienteFacturarDelCliente();
+            this.optenerReparacionesPendienteFacturarDelCliente();
+            this.optenerDeudasPendienteFacturarDelCliente();
     }
     public void setRNCCliente(String rnc){
         this.rnc_cliente = rnc;
@@ -118,22 +134,201 @@ public class Facturacion extends javax.swing.JFrame {
         this.t_email_cliente.setText(Texto.email_cliente);
 
     }
+    public void optenerReparacionesPendienteFacturarDelCliente(){
+            
+            String[] titulos = {"CODIGO REPARACION","ESTADO REPARACION","MONTO A PAGAR","CANTIDAD REPARACION","FECHA REPARACION"};
+            String table_name = " reparacion as c";
+            String campos = "c.id,c.sub_total,c.fecha_creada,c.cliente_id,c.estado, (SELECT count(c1.id) FROM reparacion_detalle as c1 WHERE c1.reparacion_id = c.id) as cantidad ";
+            String otros = " where c.cliente_id = '"+this.ClienteID+"' ";
+            //SELECT c.id,c.sub_total,c.fecha_creada,c.cliente_id,c.estado, (SELECT count(c1.id) FROM reparacion_detalle as c1 WHERE c1.reparacion_id = c.id) as cantidad FROM reparacion as c
+
+           java.sql.ResultSet resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+        try {
+            resultSet.beforeFirst();
+            resultSet.last();
+            int totalFila  = resultSet.getRow();
+            Object[][] fila = new Object[totalFila][5];
+            String codigo,estado,fecha,monto,cantidad;
+            resultSet.beforeFirst();
+            int c = 0;
+            while(resultSet.next()){
+
+                     codigo = Texto.validarNull(resultSet.getString("id"));
+                     estado = Texto.validarNull(resultSet.getString("sub_total"));
+                     monto = Texto.validarNull(resultSet.getString("estado"));
+                     fecha =Texto.validarNull(resultSet.getString("fecha_creada"));
+                      cantidad =Texto.validarNull(resultSet.getString("cantidad"));
+
+                     fila[c][0] = codigo;
+                     fila[c][1] = estado;
+                     fila[c][2] = monto;
+                     fila[c][3] = cantidad;
+                     fila[c][4] = fecha;
+                     c++;
+                     
+            } 
+             DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
+             this.jTReparacion.setModel(modelo);
+             this.jTReparacion.setVisible(true);    
+        } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+     public void optenerCotizacionPendienteFacturarDelCliente(){
+            
+            String[] titulos = {"CODIGO COTIZACION","ESTADO COTIZACION","MONTO A PAGAR COTIZACION","CANTIDAD COTIZACION","FECHA COTIZACION"};
+            String table_name = " cotizacion as c ";
+            String campos = "c.id,c.sub_total,c.fecha_creada,c.cliente_id,c.estado, (SELECT count(c1.id) FROM cotizacion_detalle as c1 WHERE c1.cotizacion_id = c.id) as cantidad ";
+            String otros = " where c.cliente_id = '"+this.ClienteID+"' ";
+            //SELECT c.id,c.sub_total,c.fecha_creada,c.cliente_id,c.estado, (SELECT count(c1.id) FROM cotizacion_detalle as c1 WHERE c1.cotizacion_id = c.id) as cantidad FROM cotizacion as c
+           java.sql.ResultSet resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+        try {
+            resultSet.beforeFirst();
+            resultSet.last();
+            int totalFila  = resultSet.getRow();
+            Object[][] fila = new Object[totalFila][5];
+            String codigo,estado,fecha,monto,cantidad;
+            resultSet.beforeFirst();
+            int c = 0;
+            while(resultSet.next()){
+
+                     codigo = Texto.validarNull(resultSet.getString("id"));
+                     estado = Texto.validarNull(resultSet.getString("sub_total"));
+                     monto = Texto.validarNull(resultSet.getString("estado"));
+                     fecha =Texto.validarNull(resultSet.getString("fecha_creada"));                     
+                     cantidad =Texto.validarNull(resultSet.getString("cantidad"));
+
+                     fila[c][0] = codigo;
+                     fila[c][1] = estado;
+                     fila[c][2] = monto;
+                     fila[c][3] = cantidad;
+                     fila[c][4] = fecha;
+                     c++;
+                     
+            } 
+             DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
+             this.jTCotizacion.setModel(modelo);
+             this.jTCotizacion.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    
+    
+    
+    }
+     
+     public void cargarTablaParaFacturar(String id,String accion){
+          this.no_agrego_producto = false;
+          this.resetArrayList();
+          this.resetTotatel();
+          this.FacturacionID = "1";
+            java.sql.ResultSet resultSet = null;
+            this.deuda = false; 
+            if(accion.equals("deuda")){
+                String table_name = "  factura_detalle as c ";
+                String campos = "c.id,c.nombre,c.fecha_creada,c.precio,c.cantidad, c.total,c.factura_id,c.cliente_id";
+                String otros = " where c.factura_id = '"+id+"'";
+                resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+                this.deuda = true;
+                this.factura_generada = true;
+            }else if(accion.equals("cotizacion")){
+                String table_name = "  cotizacion_detalle as c ";
+                String campos = "c.id,c.nombre,c.fecha_creada,c.precio,c.cantidad, c.total,c.cotizacion_id,c.cliente_id";
+                String otros = " where c.cotizacion_id = '"+id+"'";
+                resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+            }else if(accion.equals("reparacion")){
+                String table_name = "  reparacion_detalle as c ";
+                String campos = "c.id,c.nombre,c.fecha_creada,c.cantidad, c.total,c.precio_completado,c.reparacion_id,c.cliente_id,if(c.precio_completado is null or c.precio_completado = 0.00 , c.precio, c.precio_completado ) as precio";
+                String otros = " where c.reparacion_id = '"+id+"'";
+                //SELECT if(precio_completado is null or precio_completado = 0.00 , precio, precio_completado ) as precio FROM `reparacion_detalle`
+                resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+            }
+        try {
+            if(resultSet != null){
+                while(resultSet.next()){
+                         this.productoID = Texto.validarNull(resultSet.getString("id"));
+                         this.c_producto = Texto.validarNull(resultSet.getString("cantidad"));
+                         this.n_producto = Texto.validarNull(resultSet.getString("nombre"));
+                         this.p_producto =Texto.validarNull(resultSet.getString("precio"));                     
+                         this.co_producto =Texto.validarNull(resultSet.getString("id"));
+                         if(this.deuda){
+                             this.FacturacionID = Texto.validarNull(resultSet.getString("factura_id"));
+                         }
+                         this.asignarAArrayList();
+                } 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+        this.cargarJTable();
+     }
+    public void optenerDeudasPendienteFacturarDelCliente(){
+            
+            String[] titulos = {"CODIGO FACTURA","ESTADO FACTURA","MONTO FACTURA","MONTO PAGADO FACTURA","FECHA FACTURA"};
+            String table_name = "  factura as c ";
+            String campos = "c.id,c.total,c.fecha_creada,c.cliente_id,c.estado, (SELECT SUM(c1.monto_pagado) FROM pagos as c1 WHERE c1.factura_id = c.id) as monto_pagado ";
+            String otros = " where c.cliente_id = '"+this.ClienteID+"' and c.estado = 'pendiente' ";
+            //SELECT c.id,c.total,c.fecha_creada,c.cliente_id,c.estado, (SELECT SUM(c1.monto_pagado) FROM pagos as c1 WHERE c1.factura_id = c.id) as monto_pagado FROM factura as c
+            java.sql.ResultSet resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+        try {
+            resultSet.beforeFirst();
+            resultSet.last();
+            int totalFila  = resultSet.getRow();
+            Object[][] fila = new Object[totalFila][5];
+            String codigo,estado,fecha,monto,cantidad;
+            resultSet.beforeFirst();
+            int c = 0;
+            while(resultSet.next()){
+
+                     codigo = Texto.validarNull(resultSet.getString("id"));
+                     estado = Texto.validarNull(resultSet.getString("total"));
+                     monto = Texto.validarNull(resultSet.getString("estado"));
+                     fecha =Texto.validarNull(resultSet.getString("fecha_creada"));                     
+                     cantidad =Texto.validarNull(resultSet.getString("monto_pagado"));
+
+                     fila[c][0] = codigo;
+                     fila[c][2] = estado;
+                     fila[c][1] = monto;
+                     fila[c][3] = cantidad;
+                     fila[c][4] = fecha;
+                     c++;
+                     
+            } 
+             DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
+             this.jTDeuda.setModel(modelo);
+             this.jTDeuda.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    
+    
+    
+    }
     public void insertarDBDetalleFacturacion(String id,String nombre,String precio,String cantidad,String total){
             if(!this.existe_producto){
-             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,Facturacion_id,producto_inventariado_id";
+             String campos = "usuario_id,nombre,precio,cantidad,total,fecha_creada,cliente_id,factura_id,producto_inventariado_id";
              String valores = "'"+this.UsuarioID+"','"+nombre+"','"+precio+"','"+cantidad+"','"+total+"',now(),'"+this.ClienteID+"','"+this.FacturacionID+"','"+id+"'";
-             this.mysql.insertData("Facturacion_detalle", campos, valores);
+             this.mysql.insertData("factura_detalle", campos, valores);
             }
     }
     public void insertarDBFacturacion(String sub_total,String itbis,String tiene_itbis,String total){
-            String campos = "usuario_id,sub_total,itbis,tiene_itbis,total,fecha_creada,cliente_id";
-             String valores = "'"+this.UsuarioID+"','"+sub_total+"','"+itbis+"','"+tiene_itbis+"','"+total+"',now(),'"+this.ClienteID+"'";
-             this.mysql.insertData("Facturacion", campos, valores);
-             this.FacturacionID = this.mysql.optenerUltimoID("Facturacion");
+            String tieneNCF = "0";
+            if(!this.NCF.isEmpty()){
+                tieneNCF = "1";
+            }
+            
+            if(this.tiene_itbis){
+                tiene_itbis = "1";
+            }
+            String campos = "usuario_id,sub_total,itbis,tiene_itbis,total,fecha_creada,cliente_id,numero_comprovante_fiscal,tiene_comprovante_fiscal";
+             String valores = "'"+this.UsuarioID+"','"+sub_total+"','"+itbis+"','"+tiene_itbis+"','"+total+"',now(),'"+this.ClienteID+"', '"+this.NCF+"','"+tieneNCF+"' ";
+             this.mysql.insertData("factura", campos, valores);
+             this.FacturacionID = this.mysql.optenerUltimoID("factura");
     }
     public void crearFacturacion(){
-           if(!this.cotizado){
-            this.insertarDBFacturacion(this.sub_total, this.itbis_total,"0", this.monto_total);
+           if(!this.cotizado && (!this.deuda) ){
+            this.insertarDBFacturacion(this.subMontoTotal+"", this.itbisTotal+"","0", this.montoTotal+"");
             int lineas = this.nombre_producto.size();
             String nombre,precio,cantidad,total,id;
             for(int c = 0 ; c < lineas ; c++){
@@ -147,6 +342,19 @@ public class Facturacion extends javax.swing.JFrame {
             this.cotizado = true;
            }
            this.generarPDF();
+    }
+    public void reCalcular(){
+           int lineas = this.nombre_producto.size();
+            String nombre,precio,cantidad,total,id;
+            for(int c = 0 ; c < lineas ; c++){
+                     nombre = this.nombre_producto.get(c);
+                     precio = this.precio_producto.get(c);
+                     cantidad = this.cantidad_producto.get(c);
+                     total = this.sub_total_producto.get(c);
+                     id = this.producto_id.get(c);
+             double  monto = Double.parseDouble(total);
+                     this.totales(monto);
+            }
     }
     public void asignarAArrayList(){
         this.producto_id.add(this.productoID);
@@ -186,12 +394,20 @@ public class Facturacion extends javax.swing.JFrame {
         if(this.tiene_itbis){
             itbis = monto * 0.18; 
         }
-        monto_total = monto - itbis; 
+        monto_total = monto + itbis; 
+        this.montoTotal +=monto_total;
+        this.itbisTotal += itbis;
+        this.subMontoTotal += monto;
         this.itbis_total = ""+itbis;
         this.monto_total = ""+monto_total;
-        this.cotizacion_itbis_total.setText("$ "+this.itbis_total);
-        this.cotizacion_sub_total.setText("$ "+this.sub_total);
-        this.cotizacion_monto_total.setText("$ "+this.monto_total);
+        this.cotizacion_itbis_total.setText("$ "+this.itbisTotal);
+        this.cotizacion_sub_total.setText("$ "+this.subMontoTotal);
+        this.cotizacion_monto_total.setText("$ "+this.montoTotal);
+    }
+    public void resetTotatel(){
+         this.montoTotal = 0.00;
+        this.itbisTotal = 0.00;
+        this.subMontoTotal = 0.00;
     }
     public void cargarJTable(){
            String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL"};
@@ -246,14 +462,18 @@ public class Facturacion extends javax.swing.JFrame {
             JasperReport loadObject = (JasperReport) JRLoader.loadObject(Facturacion.class.getResource("../theme/facturacion.jasper"));
             Map parameters = new HashMap<String, Object>();
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(productos); 
-            System.out.println(getClass().getResource("../icono/iconoclinica.gif"));
-            parameters.put("logo_empresa", ""+getClass().getResource("../icono/iconoclinica.gif"));
-            parameters.put("nombre_empresa", "V & R");
+            //System.out.println(getClass().getResource("../icono/iconoclinica.gif"));
+            parameters.put("logo_empresa", ""+getClass().getResource(Empresa.logo));
+            parameters.put("nombre_empresa", Empresa.nombre);
+            parameters.put("eslogan_empresa", Empresa.eslogan);
+
             parameters.put("ncf_empresa", this.NCF);
-            parameters.put("rnc_empresa", "10001000");
+            parameters.put("rnc_empresa", Empresa.rnc);
+            parameters.put("telefono_empresa", Empresa.telefono);
+            parameters.put("celular_empresa", Empresa.celular);
+            parameters.put("email_empresa", Empresa.email);
 
             parameters.put("no_factura", this.FacturacionID);
-            parameters.put("eslogan_empresa", "SERVICIOS DE HERRAMIENTAS");
             parameters.put("fecha", this.obtenerFechaActual());
             
             
@@ -261,9 +481,9 @@ public class Facturacion extends javax.swing.JFrame {
             parameters.put("numero_cliente", this.ClienteID);
             parameters.put("nombre_cliente", this.t_nombre_cliente.getText());
             /*parameters.put("no_factura", this.idFactura);*/
-            parameters.put("sub_total","$ "+this.sub_total);
-            parameters.put("monto_total","$ "+this.monto_total);
-            parameters.put("itbis", "$ "+this.itbis_total);
+            parameters.put("sub_total","$ "+this.subMontoTotal);
+            parameters.put("monto_total","$ "+this.montoTotal);
+            parameters.put("itbis", "$ "+this.itbisTotal);
 
             
             JasperPrint jp = JasperFillManager.fillReport(loadObject, parameters, ds);           
@@ -372,12 +592,20 @@ public class Facturacion extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         JCBTieneITBIS = new javax.swing.JCheckBox();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        JPReparacion = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTReparacion = new javax.swing.JTable();
+        JPCotizacion = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTCotizacion = new javax.swing.JTable();
+        JPDeuda = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTDeuda = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -399,9 +627,9 @@ public class Facturacion extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cotizacion_sub_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cotizacion_monto_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cotizacion_itbis_total, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                    .addComponent(cotizacion_sub_total, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cotizacion_monto_total, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cotizacion_itbis_total, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -411,15 +639,15 @@ public class Facturacion extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cotizacion_sub_total, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cotizacion_itbis_total, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cotizacion_monto_total, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -597,23 +825,15 @@ public class Facturacion extends javax.swing.JFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable2);
-
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("COTIZACIONES O REPARACIONES DEL CLIENTE");
+        jLabel5.setText("COTIZACIONES, REPARACIONES, DEUDAS DEL CLIENTE");
 
         JCBTieneITBIS.setText("Tiene ITBIS?");
+        JCBTieneITBIS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                JCBTieneITBISStateChanged(evt);
+            }
+        });
 
         jButton5.setText("Agregar Nota");
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -628,6 +848,96 @@ public class Facturacion extends javax.swing.JFrame {
                 jButton6MouseClicked(evt);
             }
         });
+
+        jTReparacion.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTReparacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTReparacionMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTReparacion);
+
+        javax.swing.GroupLayout JPReparacionLayout = new javax.swing.GroupLayout(JPReparacion);
+        JPReparacion.setLayout(JPReparacionLayout);
+        JPReparacionLayout.setHorizontalGroup(
+            JPReparacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+        );
+        JPReparacionLayout.setVerticalGroup(
+            JPReparacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("REPARACIONES", JPReparacion);
+
+        jTCotizacion.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTCotizacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTCotizacionMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jTCotizacion);
+
+        javax.swing.GroupLayout JPCotizacionLayout = new javax.swing.GroupLayout(JPCotizacion);
+        JPCotizacion.setLayout(JPCotizacionLayout);
+        JPCotizacionLayout.setHorizontalGroup(
+            JPCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+        );
+        JPCotizacionLayout.setVerticalGroup(
+            JPCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("COTIZACIONES", JPCotizacion);
+
+        jTDeuda.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTDeuda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTDeudaMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTDeuda);
+
+        javax.swing.GroupLayout JPDeudaLayout = new javax.swing.GroupLayout(JPDeuda);
+        JPDeuda.setLayout(JPDeudaLayout);
+        JPDeudaLayout.setHorizontalGroup(
+            JPDeudaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+        );
+        JPDeudaLayout.setVerticalGroup(
+            JPDeudaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("DEUDAS", JPDeuda);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -652,17 +962,13 @@ public class Facturacion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(67, 67, 67)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                            .addComponent(jTabbedPane1)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 543, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -672,10 +978,10 @@ public class Facturacion extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel5))
-                .addGap(15, 15, 15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -689,7 +995,7 @@ public class Facturacion extends javax.swing.JFrame {
                     .addComponent(jButton5)
                     .addComponent(jButton6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -699,6 +1005,7 @@ public class Facturacion extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
         this.agregarTabla();
+        this.deuda = false;
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void t_codigo_productoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_productoFocusGained
@@ -846,11 +1153,61 @@ public class Facturacion extends javax.swing.JFrame {
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
         if(this.factura_generada){
-            
+            Pago p = new Pago(this.mysql);
+            p.setObjectFacturacion(this.ObjectFacturacion);
+            p.setBalance(this.monto_total);
+            p.setVisible(true);
         }else{
-            JOptionPane.showMessageDialog(null, "Debe generar la factura antes de pagarla", "Advertencia ", JOptionPane.WARNING_MESSAGE);
+            int respuesta  = JOptionPane.showConfirmDialog(  null,  "Debe generar la factura antes de pagarla, Desea generarla ahora?","Advertencia ",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if(respuesta == JOptionPane.YES_OPTION){
+               // JOptionPane.showMessageDialog(null, "null");
+                if(this.validarQueTengaUnoSeleccionado()){
+                        this.crearFacturacion();
+                        this.factura_generada = true;
+                }
+                if(this.factura_generada){
+                        Pago p = new Pago(this.mysql);
+                        p.setObjectFacturacion(this.ObjectFacturacion);
+                        p.setBalance(this.monto_total);
+                        p.setVisible(true);
+                }
+            }
         }
     }//GEN-LAST:event_jButton4MouseClicked
+
+    private void jTDeudaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTDeudaMouseClicked
+        // TODO add your handling code here:
+        int row =  this.jTDeuda.getSelectedRow();
+        String id = this.jTDeuda.getValueAt(row, 0).toString();
+        this.cargarTablaParaFacturar(id,"deuda");
+    }//GEN-LAST:event_jTDeudaMouseClicked
+
+    private void jTCotizacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTCotizacionMouseClicked
+        // TODO add your handling code here:
+        int row =  this.jTCotizacion.getSelectedRow();
+        String id = this.jTCotizacion.getValueAt(row, 0).toString();
+        this.cargarTablaParaFacturar(id,"cotizacion");
+    }//GEN-LAST:event_jTCotizacionMouseClicked
+
+    private void jTReparacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTReparacionMouseClicked
+        // TODO add your handling code here:
+        int row =  this.jTReparacion.getSelectedRow();
+        String id = this.jTReparacion.getValueAt(row, 0).toString();
+        this.cargarTablaParaFacturar(id,"reparacion");
+    }//GEN-LAST:event_jTReparacionMouseClicked
+
+    private void JCBTieneITBISStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_JCBTieneITBISStateChanged
+        // TODO add your handling code here:
+        this.resetTotatel();
+       if( this.JCBTieneITBIS.isSelected())
+       {
+           this.tiene_itbis = true;
+           this.reCalcular();
+       }else{
+           this.tiene_itbis = false;
+           this.reCalcular();
+       }
+    }//GEN-LAST:event_JCBTieneITBISStateChanged
 
     /**
      * @param args the command line arguments
@@ -891,6 +1248,9 @@ public class Facturacion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox JCBTieneITBIS;
+    private javax.swing.JPanel JPCotizacion;
+    private javax.swing.JPanel JPDeuda;
+    private javax.swing.JPanel JPReparacion;
     private javax.swing.JLabel cotizacion_itbis_total;
     private javax.swing.JLabel cotizacion_monto_total;
     private javax.swing.JLabel cotizacion_sub_total;
@@ -910,8 +1270,13 @@ public class Facturacion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTCotizacion;
+    private javax.swing.JTable jTDeuda;
+    private javax.swing.JTable jTReparacion;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField t_cantidad_producto;
     private javax.swing.JTextField t_cedula_cliente;
     private javax.swing.JTextField t_codigo_cliente;

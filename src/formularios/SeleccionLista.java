@@ -22,20 +22,31 @@ public class SeleccionLista extends javax.swing.JFrame {
     private int totalFila;
     private Cotizacion cotizacion = null;
     private Facturacion facturacion = null;
+    private Reparacion reparacion = null;
 
+        private SeleccionLista seleccionador;
+    private javax.swing.JTextField TextBox;
+    private String palabra="";
+    private String tablaSeleccionada="",texto="";
+    private String claseManejando ="cotizacion";
 
+    private String tipoProducto="venta_producto";
+
+        
     public Cotizacion getCotizacion() {
         return cotizacion;
     }
     public Facturacion getFacturacion() {
         return facturacion;
     }
-    private SeleccionLista seleccionador;
-    private javax.swing.JTextField TextBox;
-    private String palabra="";
-    private String tablaSeleccionada="",texto="";
-    private String claseManejando ="cotizacion";
 
+
+    public void validarReparacion(){
+        if(this.reparacion != null){
+            this.tipoProducto="repacion_producto";
+             this.cargarDBTabla();
+        }
+    }
     public void setClaseManejando(String claseManejando) {
         this.claseManejando = claseManejando;
     }
@@ -109,6 +120,9 @@ public class SeleccionLista extends javax.swing.JFrame {
     public void setObjectFacturacion(Facturacion facturacion){
        this.facturacion = facturacion;
     }
+    public void setObjectReparacion(Reparacion reparacion){
+       this.reparacion = reparacion;
+    }
     public void setTextBox(javax.swing.JTextField TextBox){
        this.TextBox = TextBox;
     }
@@ -128,12 +142,12 @@ public class SeleccionLista extends javax.swing.JFrame {
             String[] titulos = {"CODIGO PRODUCTO","NOMBRE PRODUCTO","PRECIO PRODUCTO","CANTIDAD EN ALMASEN "};
             String table_name = " producto_inventariado ";
             String campos = "id,nombre,cantidad_comprada,precio_venta";
-            String otros = "";
+            String otros = " where tipo_producto = '"+this.tipoProducto+"' ";
             
            if( (menu.toLowerCase().equals("codigo"))  && (!palabra.isEmpty()) ){
-                otros = " where id = '"+palabra+"' ";
+                otros += " and id = '"+palabra+"' ";
            }else if((menu.toLowerCase().equals("nombre"))  && (!palabra.isEmpty()) ){
-                otros = " where nombre like '%"+palabra+"%' ";
+                otros += " and nombre like '%"+palabra+"%' ";
            }
            
           /* otros = otros+" GROUP by c.id\n" +
@@ -345,6 +359,9 @@ public class SeleccionLista extends javax.swing.JFrame {
             if(this.facturacion != null){
             this.facturacion.setDatosProducto(productoID, nombre, precio,"1");
             }
+            if(this.reparacion != null){
+            this.reparacion.setDatosProducto(productoID, nombre, precio,"1");
+            }
             this.perderFocus();
             this.dispose();
           }else if(this.tablaSeleccionada.equals("cliente")){
@@ -356,10 +373,13 @@ public class SeleccionLista extends javax.swing.JFrame {
             String cedula = this.jTable1.getValueAt(fila, 2).toString();
             String telefono = this.jTable1.getValueAt(fila, 4).toString();
             String email = this.jTable1.getValueAt(fila, 5).toString();
-            String rnc = this.jTable1.getValueAt(fila, 6).toString();
+            String rnc = this.jTable1.getValueAt(fila, 7).toString();
 
              if(this.cotizacion != null){
             this.cotizacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
+             }
+             if(this.reparacion != null){
+                this.reparacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
              }
              if(this.facturacion != null){
               this.facturacion.setDatosCliente(ClienteID, nombre, cedula,telefono,email);
