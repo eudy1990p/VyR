@@ -41,7 +41,9 @@ public class Reparacion extends javax.swing.JFrame {
     private ArrayList<String> precio_producto = new ArrayList<String>();
     private ArrayList<String> cantidad_producto = new ArrayList<String>();
     private ArrayList<String> nota_producto = new ArrayList<String>();
-
+    private ArrayList<String> estado_producto = new ArrayList<String>();
+    private ArrayList<String> precio_completo_producto  = new ArrayList<String>();
+                
     private double montoTotal = 0.00,subMontoTotal = 0.00,abonoTotal = 0.00;
 
     public void resetArrayList(){
@@ -52,16 +54,19 @@ public class Reparacion extends javax.swing.JFrame {
         this.precio_producto = new ArrayList<String>();
         this.cantidad_producto = new ArrayList<String>();
         this.nota_producto = new ArrayList<String>();
+        this.estado_producto = new ArrayList<String>();
+        this.precio_completo_producto = new ArrayList<String>();
     }
     private List productos;
     
     private String no_producto,n_producto,p_producto,c_producto,co_producto, sub_total,itbis_total, monto_total;
-    private boolean factura_generada = false,deuda = false;
+    private boolean factura_generada = false,deuda = false,mostrarPDF = true;
     
     private boolean existe_cliente = false,existe_producto= false,cotizado = false,no_agrego_producto = true,no_agrego_cliente = true;
     private Mysql mysql;
     
     private String rnc_cliente="";
+    private String estado_productot="",precio_completo_productot="";
     
     private String ClienteID="1",UsuarioID="1",ReparacionID="1",productoID="1";
     
@@ -118,7 +123,8 @@ public class Reparacion extends javax.swing.JFrame {
         this.t_precio_producto.setText(Texto.precio_producto);
         this.t_cantidad_producto.setText(Texto.cantidad_producto);
         this.t_codigo_producto.setText(Texto.codigo_producto);
-        
+        this.jTANotaReparacion.setText(Texto.nota_producto);
+
         //this.t_nombre_cliente.setText(Texto.nombre_cliente);
         //this.t_cedula_cliente.setText(Texto.cedula_cliente);
         //this.t_codigo_cliente.setText(Texto.codigo_cliente);
@@ -244,10 +250,12 @@ public class Reparacion extends javax.swing.JFrame {
                 resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
             }else if(accion.equals("reparacion")){
                 String table_name = "  reparacion_detalle as c ";
-                String campos = "c.id,c.nombre,c.fecha_creada,c.cantidad, c.total,c.precio_completado,c.reparacion_id,c.cliente_id,if(c.precio_completado is null or c.precio_completado = 0.00 , c.precio, c.precio_completado ) as precio";
+                String campos = "c.nota,c.estado,c.precio_completado,c.precio , c.id,c.nombre,c.fecha_creada,c.cantidad, c.total,c.precio_completado,c.reparacion_id,c.cliente_id,if(c.precio_completado is null or c.precio_completado = 0.00 , c.precio, c.precio_completado ) as precio1";
                 String otros = " where c.reparacion_id = '"+id+"'";
                 //SELECT if(precio_completado is null or precio_completado = 0.00 , precio, precio_completado ) as precio FROM `reparacion_detalle`
                 resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+                this.deuda = true;
+                this.factura_generada = true;
             }
         try {
             if(resultSet != null){
@@ -258,9 +266,10 @@ public class Reparacion extends javax.swing.JFrame {
                          this.p_producto =Texto.validarNull(resultSet.getString("precio"));                     
                          this.co_producto =Texto.validarNull(resultSet.getString("id"));
                          this.no_producto =Texto.validarNull(resultSet.getString("nota"));
-
+                         this.estado_productot =Texto.validarNull(resultSet.getString("estado"));
+                         this.precio_completo_productot =Texto.validarNull(resultSet.getString("precio_completado"));
                          if(this.deuda){
-                             this.ReparacionID = Texto.validarNull(resultSet.getString("factura_id"));
+                             this.ReparacionID = Texto.validarNull(resultSet.getString("reparacion_id"));
                          }
                          this.asignarAArrayList();
                 } 
@@ -325,6 +334,12 @@ public class Reparacion extends javax.swing.JFrame {
              this.mysql.insertData("reparacion", campos, valores);
              this.ReparacionID = this.mysql.optenerUltimoID("reparacion");
     }
+    public void completarReparacion(){
+        boolean respuesta = this.mysql.actulizarDatos("reparacion","estado = 'completo' ", " id = '"+this.ReparacionID+"' ");
+        if(respuesta){
+            JOptionPane.showMessageDialog(null, "La reparación paso al estado de completado ","Reparacioón Completada",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
     public void crearReparacion(){
            if(!this.cotizado && (!this.deuda) ){
             this.insertarDBReparacion(this.subMontoTotal+"", this.notaReparacion,this.abonoTotal);
@@ -337,11 +352,13 @@ public class Reparacion extends javax.swing.JFrame {
                      total = this.sub_total_producto.get(c);
                      nota = this.nota_producto.get(c);
                     id = this.producto_id.get(c);
-                 this.insertarDBDetalleReparacion(id,nombre, precio, cantidad, total,nota);
+                    this.insertarDBDetalleReparacion(id,nombre, precio, cantidad, total,nota);
             }
             this.cotizado = true;
            }
+           if(this.mostrarPDF){
            this.generarPDF();
+           }
     }
     public void reCalcular(){
            int lineas = this.nombre_producto.size();
@@ -363,12 +380,14 @@ public class Reparacion extends javax.swing.JFrame {
         this.precio_producto.add(""+this.p_producto);
         this.codigo_producto.add(this.co_producto);
         this.nota_producto.add(this.no_producto);
-
+        this.estado_producto.add(this.estado_productot);
+        this.precio_completo_producto.add(this.precio_completo_productot);
         double monto =(Double.parseDouble(c_producto) * Double.parseDouble(p_producto) );
         this.sub_total_producto.add( ""+monto );
         this.totales(monto);
     }
     public void agregarTabla(){
+        this.validarAgregarEntradaProducto();
         boolean r = this.validadVacio();
         if(r){
             this.no_agrego_producto = false;
@@ -383,6 +402,8 @@ public class Reparacion extends javax.swing.JFrame {
         Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
         Texto.placeholder(Texto.precio_producto,this.t_precio_producto.getText(), this.t_precio_producto);
         Texto.placeholder(Texto.cantidad_producto,this.t_cantidad_producto.getText(), this.t_cantidad_producto);
+        Texto.placeholder(Texto.nota_producto,this.jTANotaReparacion.getText(), this.jTANotaReparacion);
+        
     }
    
     public void totales(double monto){
@@ -405,13 +426,13 @@ public class Reparacion extends javax.swing.JFrame {
         this.subMontoTotal = 0.00;
     }
     public void cargarJTable(){
-           String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL","NOTA"};
+           String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL","PRECIO COMPLETADO","ESTADO","NOTA"};
            int lineas = this.nombre_producto.size();
-           String nombre,precio,cantidad,total,id,nota;
+           String nombre,precio,cantidad,total,id,nota,precioCompleto,estado;
            
            this.productos  = new LinkedList();
            
-           Object[][] fila = new Object[lineas][5];
+           Object[][] fila = new Object[lineas][8];
            
            for(int c = 0 ; c < lineas ; c++){
                     id = this.codigo_producto.get(c);
@@ -420,13 +441,17 @@ public class Reparacion extends javax.swing.JFrame {
                     cantidad = this.cantidad_producto.get(c);
                     total = this.sub_total_producto.get(c);
                     nota = this.nota_producto.get(c);
-
+                    estado = this.estado_producto.get(c);
+                    precioCompleto = this.precio_completo_producto.get(c);
                     fila[c][0] = id;
                     fila[c][1] = nombre;
                     fila[c][2] = cantidad;
                     fila[c][3] = precio;
                     fila[c][4] = total;
-                    fila[c][5] = total;
+                    fila[c][5] = estado;
+                    fila[c][6] = precioCompleto;
+                    
+                    fila[c][7] = nota;
                     
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
@@ -929,6 +954,14 @@ public class Reparacion extends javax.swing.JFrame {
 
         jTANotaReparacion.setColumns(20);
         jTANotaReparacion.setRows(5);
+        jTANotaReparacion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTANotaReparacionFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTANotaReparacionFocusLost(evt);
+            }
+        });
         jScrollPane5.setViewportView(jTANotaReparacion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1058,6 +1091,22 @@ public class Reparacion extends javax.swing.JFrame {
             this.crearReparacion();
             this.factura_generada = true;
         }*/
+        if(this.validarQueTengaUnoSeleccionado()){
+            this.mostrarPDF  = false;
+            this.crearReparacion();
+            this.factura_generada = true;
+            this.mostrarPDF = true;
+            this.completarReparacion();
+            
+            Facturacion f = new Facturacion();
+            
+            f.setDatosCliente(this.ClienteID, this.t_nombre_cliente.getText(), this.t_cedula_cliente.getText(), this.t_telefono_cliente.getText(),this.t_email_cliente.getText());
+            f.cargarTablaParaFacturar(this.ReparacionID,"reparacion");
+            
+            JOptionPane.showMessageDialog(null, "Ha pasado a FACTURACIÓN si no desea hacer cambios, clic en facturar","Generar Factura",JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+            f.setVisible(true);
+      }
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void t_codigo_clienteFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_t_codigo_clienteFocusGained
@@ -1196,6 +1245,22 @@ public class Reparacion extends javax.swing.JFrame {
         this.notaReparacion = JOptionPane.showInputDialog(null, "Ingrese su Nota", "Agregar Nota a la Reparación", JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jButton5MouseClicked
+
+    private void jTANotaReparacionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTANotaReparacionFocusGained
+        // TODO add your handling code here:
+        Texto.placeholder(Texto.nota_producto,this.jTANotaReparacion.getText(), this.jTANotaReparacion);
+         //Texto.setPlaceholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+   
+    }//GEN-LAST:event_jTANotaReparacionFocusGained
+
+    private void jTANotaReparacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTANotaReparacionFocusLost
+        // TODO add your handling code here:
+       // Texto.placeholder(Texto.nota_producto,this.jTANotaReparacion.getText(), this.jTANotaReparacion);
+        Texto.setPlaceholder(Texto.nota_producto,this.jTANotaReparacion.getText(), this.jTANotaReparacion);
+ 
+        //Texto.setPlaceholder(Texto.email_cliente,this.t_email_cliente.getText(), this.t_email_cliente);
+   
+    }//GEN-LAST:event_jTANotaReparacionFocusLost
 
     /**
      * @param args the command line arguments

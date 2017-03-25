@@ -71,8 +71,12 @@ public class crearProducto extends javax.swing.JFrame {
              this.personaID = this.mysql.optenerUltimoID("persona");
     }*/
     public void insertarDBProducto(){
-           String campos = "usuario_id,nombre,cantidad_comprada,precio_compra,precio_venta,fecha_creado";//fecha_nacimiento
-             String valores = "'"+this.usuarioID+"','"+this.nombre+"','"+this.cantidadComprada+"','"+this.precioCompra+"','"+this.precioVenta+"',now()";
+            String tipoProducto = "venta_producto";
+            if(this.classSeleccionListado.getReparacion() != null){
+               tipoProducto = "repacion_producto"; 
+            }
+           String campos = "usuario_id,nombre,cantidad_comprada,precio_compra,precio_venta,fecha_creado,tipo_producto";//fecha_nacimiento
+             String valores = "'"+this.usuarioID+"','"+this.nombre+"','"+this.cantidadComprada+"','"+this.precioCompra+"','"+this.precioVenta+"',now(),'"+tipoProducto+"'";
              this.mysql.insertData("producto_inventariado", campos, valores);
              this.productoID = this.mysql.optenerUltimoID("producto_inventariado");
     }
@@ -131,6 +135,12 @@ public class crearProducto extends javax.swing.JFrame {
            if(this.classSeleccionListado.getFacturacion() != null){
                 this.dispose();
                 this.classSeleccionListado.getFacturacion().setDatosProducto(this.productoID, this.nombre, this.precioVenta,this.cantidadVendida);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
+           if(this.classSeleccionListado.getReparacion()!= null){
+                this.dispose();
+                this.classSeleccionListado.getReparacion().setDatosProducto(this.productoID, this.nombre, this.precioVenta,this.cantidadVendida);
                 this.classSeleccionListado.perderFocus();
                 this.classSeleccionListado.dispose();
            }

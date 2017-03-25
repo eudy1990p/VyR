@@ -141,6 +141,13 @@ public class crearCliente extends javax.swing.JFrame {
                 this.classSeleccionListado.perderFocus();
                 this.classSeleccionListado.dispose();
            }
+           if(this.classSeleccionListado.getReparacion() != null){
+                this.insertarDBCliente();
+                this.dispose();
+                this.classSeleccionListado.getReparacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
+                this.classSeleccionListado.perderFocus();
+                this.classSeleccionListado.dispose();
+           }
         }
     }
     /**

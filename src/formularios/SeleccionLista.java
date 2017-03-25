@@ -39,7 +39,9 @@ public class SeleccionLista extends javax.swing.JFrame {
     public Facturacion getFacturacion() {
         return facturacion;
     }
-
+    public Reparacion getReparacion() {
+        return reparacion;
+    }
 
     public void validarReparacion(){
         if(this.reparacion != null){

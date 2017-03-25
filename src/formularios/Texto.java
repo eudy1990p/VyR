@@ -22,12 +22,25 @@ public class Texto {
     static String precio_producto = "Precio Producto";  
     static String cantidad_producto = "Cantidad Producto";
     
+    static String nota_producto = "Nota Producto";
+    
+    
     public static void placeholder(String texto1, String texto2, javax.swing.JTextField t){
         if( texto1.equals(texto2) ){
             t.setText("");
         }
     }
+    public static void placeholder(String texto1, String texto2, javax.swing.JTextArea t){
+        if( texto1.equals(texto2) ){
+            t.setText("");
+        }
+    }
     public static void setPlaceholder(String texto1, String texto2, javax.swing.JTextField t){
+        if( texto2.isEmpty() ){
+            t.setText(texto1);
+        }
+    }
+    public static void setPlaceholder(String texto1, String texto2, javax.swing.JTextArea t){
         if( texto2.isEmpty() ){
             t.setText(texto1);
         }

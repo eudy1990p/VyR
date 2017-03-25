@@ -694,7 +694,21 @@ public class Mysql {
             return false;
         }
     }
-
+    
+    public boolean actulizarDatos(String table_name,String campos, String where) {
+        try {
+            //String Query = "DELETE FROM " + table_name + " WHERE ID = \"" + ID + "\"";
+            String Query = "update " + table_name + " set "+campos+" WHERE  " + where +"";
+            Statement st = Conexion.createStatement();
+            st.executeUpdate(Query);
+            return true;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error ha marcar como completado la reparación");
+            return false;
+        }
+    }
+    
     public boolean updateRecord(String table_name, String id,String[] key, String[] value) {
         String keysValues = "";
         try {
