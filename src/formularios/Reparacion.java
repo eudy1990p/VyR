@@ -596,6 +596,8 @@ public class Reparacion extends javax.swing.JFrame {
         JPDeuda = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTDeuda = new javax.swing.JTable();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        RegistrarPaso = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cotizacion_sub_total = new javax.swing.JLabel();
@@ -686,6 +688,9 @@ public class Reparacion extends javax.swing.JFrame {
             JPDeudaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
         );
+
+        RegistrarPaso.setText("jMenu1");
+        jPopupMenu1.add(RegistrarPaso);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -1303,6 +1308,7 @@ public class Reparacion extends javax.swing.JFrame {
     private javax.swing.JPanel JPCotizacion;
     private javax.swing.JPanel JPDeuda;
     private javax.swing.JPanel JPReparacion;
+    private javax.swing.JMenu RegistrarPaso;
     private javax.swing.JLabel cotizacion_itbis_total;
     private javax.swing.JLabel cotizacion_monto_total;
     private javax.swing.JLabel cotizacion_sub_total;
@@ -1320,6 +1326,7 @@ public class Reparacion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
