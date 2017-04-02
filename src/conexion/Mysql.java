@@ -699,6 +699,7 @@ public class Mysql {
         try {
             //String Query = "DELETE FROM " + table_name + " WHERE ID = \"" + ID + "\"";
             String Query = "update " + table_name + " set "+campos+" WHERE  " + where +"";
+            System.out.println(Query);
             Statement st = Conexion.createStatement();
             st.executeUpdate(Query);
             return true;
@@ -819,19 +820,15 @@ public class Mysql {
      java.sql.ResultSet resultSet = null;
         try {
             String Query = "SELECT "+campos+" FROM " + table_name+" "+otros;
-           System.out.print(Query);
+           System.out.println(Query);
             Statement st = Conexion.createStatement();
             
             resultSet = st.executeQuery(Query);
-           /*
-           if (resultSet.next()) {
-                id = resultSet.getString("id");
-                System.out.println("ID: " + resultSet.getString("ID") );
-            }*/
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error en la adquisición de datos getValues(String table_name)");
         }
+        
         return resultSet;
     }
 }

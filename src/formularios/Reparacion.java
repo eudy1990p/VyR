@@ -79,9 +79,9 @@ public class Reparacion extends javax.swing.JFrame {
         //this.limpiarProductoTexto();
         this.limpiarTodoTexto();
         mysql =new Mysql();
-        this.jTDeuda.setVisible(false);
+//        this.jTDeuda.setVisible(false);
         this.jTReparacion.setVisible(false);
-        this.jTCotizacion.setVisible(false);
+  //      this.jTCotizacion.setVisible(false);
         
     }
     
@@ -219,8 +219,8 @@ public class Reparacion extends javax.swing.JFrame {
                      
             } 
              DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
-             this.jTCotizacion.setModel(modelo);
-             this.jTCotizacion.setVisible(true);
+//             this.jTCotizacion.setModel(modelo);
+  ///           this.jTCotizacion.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
         } 
@@ -312,8 +312,8 @@ public class Reparacion extends javax.swing.JFrame {
                      
             } 
              DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
-             this.jTDeuda.setModel(modelo);
-             this.jTDeuda.setVisible(true);
+//             this.jTDeuda.setModel(modelo);
+  //           this.jTDeuda.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
         } 
@@ -456,7 +456,7 @@ public class Reparacion extends javax.swing.JFrame {
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
           DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
-          this.jTable1.setModel(modelo);
+          this.jTableR.setModel(modelo);
     }
     public boolean validadVacio(){
         boolean respuesta = true;
@@ -590,14 +590,9 @@ public class Reparacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JPCotizacion = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTCotizacion = new javax.swing.JTable();
-        JPDeuda = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTDeuda = new javax.swing.JTable();
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        RegistrarPaso = new javax.swing.JMenu();
+        RegistrarPaso = new javax.swing.JMenuItem();
+        Historial = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cotizacion_sub_total = new javax.swing.JLabel();
@@ -619,7 +614,7 @@ public class Reparacion extends javax.swing.JFrame {
         t_cantidad_producto = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableR = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -633,64 +628,16 @@ public class Reparacion extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         jTANotaReparacion = new javax.swing.JTextArea();
 
-        jTCotizacion.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTCotizacion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTCotizacionMouseClicked(evt);
+        RegistrarPaso.setText("Registrar Avances");
+        RegistrarPaso.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                RegistrarPasoMousePressed(evt);
             }
         });
-        jScrollPane3.setViewportView(jTCotizacion);
-
-        javax.swing.GroupLayout JPCotizacionLayout = new javax.swing.GroupLayout(JPCotizacion);
-        JPCotizacion.setLayout(JPCotizacionLayout);
-        JPCotizacionLayout.setHorizontalGroup(
-            JPCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
-        );
-        JPCotizacionLayout.setVerticalGroup(
-            JPCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-        );
-
-        jTDeuda.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTDeuda.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTDeudaMouseClicked(evt);
-            }
-        });
-        jScrollPane4.setViewportView(jTDeuda);
-
-        javax.swing.GroupLayout JPDeudaLayout = new javax.swing.GroupLayout(JPDeuda);
-        JPDeuda.setLayout(JPDeudaLayout);
-        JPDeudaLayout.setHorizontalGroup(
-            JPDeudaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
-        );
-        JPDeudaLayout.setVerticalGroup(
-            JPDeudaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-        );
-
-        RegistrarPaso.setText("jMenu1");
         jPopupMenu1.add(RegistrarPaso);
+
+        Historial.setText("Detalle");
+        jPopupMenu1.add(Historial);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -876,7 +823,7 @@ public class Reparacion extends javax.swing.JFrame {
                 .addComponent(jButton1))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableR.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -887,7 +834,8 @@ public class Reparacion extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jTableR.setComponentPopupMenu(jPopupMenu1);
+        jScrollPane1.setViewportView(jTableR);
 
         jButton2.setText("VISTA PREVIA");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1224,20 +1172,6 @@ public class Reparacion extends javax.swing.JFrame {
         }*/
     }//GEN-LAST:event_jButton4MouseClicked
 
-    private void jTDeudaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTDeudaMouseClicked
-        // TODO add your handling code here:
-        int row =  this.jTDeuda.getSelectedRow();
-        String id = this.jTDeuda.getValueAt(row, 0).toString();
-        this.cargarTablaParaFacturar(id,"deuda");
-    }//GEN-LAST:event_jTDeudaMouseClicked
-
-    private void jTCotizacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTCotizacionMouseClicked
-        // TODO add your handling code here:
-        int row =  this.jTCotizacion.getSelectedRow();
-        String id = this.jTCotizacion.getValueAt(row, 0).toString();
-        this.cargarTablaParaFacturar(id,"cotizacion");
-    }//GEN-LAST:event_jTCotizacionMouseClicked
-
     private void jTReparacionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTReparacionMouseClicked
         // TODO add your handling code here:
         int row =  this.jTReparacion.getSelectedRow();
@@ -1267,6 +1201,18 @@ public class Reparacion extends javax.swing.JFrame {
    
     }//GEN-LAST:event_jTANotaReparacionFocusLost
 
+    private void RegistrarPasoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegistrarPasoMousePressed
+        // TODO add your handling code here:
+        this.pop();
+    }//GEN-LAST:event_RegistrarPasoMousePressed
+public void pop(){
+    String r_detalle_id = "";
+        int row = this.jTableR.getSelectedRow();
+        r_detalle_id = this.jTableR.getValueAt(row, 0).toString();
+        PasoReparacionSeguimiento pasos = new PasoReparacionSeguimiento(this.mysql);
+        pasos.obtenerDatosDB(r_detalle_id);
+        pasos.setVisible(true);
+}
     /**
      * @param args the command line arguments
      */
@@ -1305,10 +1251,9 @@ public class Reparacion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel JPCotizacion;
-    private javax.swing.JPanel JPDeuda;
+    private javax.swing.JMenuItem Historial;
     private javax.swing.JPanel JPReparacion;
-    private javax.swing.JMenu RegistrarPaso;
+    private javax.swing.JMenuItem RegistrarPaso;
     private javax.swing.JLabel cotizacion_itbis_total;
     private javax.swing.JLabel cotizacion_monto_total;
     private javax.swing.JLabel cotizacion_sub_total;
@@ -1329,15 +1274,11 @@ public class Reparacion extends javax.swing.JFrame {
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTANotaReparacion;
-    private javax.swing.JTable jTCotizacion;
-    private javax.swing.JTable jTDeuda;
     private javax.swing.JTable jTReparacion;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableR;
     private javax.swing.JTextField t_cantidad_producto;
     private javax.swing.JTextField t_cedula_cliente;
     private javax.swing.JTextField t_codigo_cliente;
