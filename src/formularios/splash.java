@@ -6,8 +6,11 @@
 package formularios;
 
 import com.sun.awt.AWTUtilities;
+import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import org.edisoncor.gui.util.WindowsUtil;
 
 
@@ -27,14 +30,21 @@ public class splash extends javax.swing.JFrame implements Runnable {
         initComponents();
         AWTUtilities.setWindowOpaque(this, false);
         this.setLocationRelativeTo(null);
+         this.scalarImagen();
     }
     public splash(conexion.Mysql mysql){
         initComponents();
         AWTUtilities.setWindowOpaque(this, false);
         this.setLocationRelativeTo(null);
         this.mysql = mysql;
+        this.scalarImagen();
     }
 
+    public void scalarImagen(){
+        ImageIcon  img = new ImageIcon(splash.class.getResource("../icono/iconoclinica.gif"));
+        Icon imgIco = new ImageIcon(img.getImage().getScaledInstance(this.jLabel1.getWidth(), this.jLabel1.getHeight() ,Image.SCALE_DEFAULT));
+        this.jLabel1.setIcon(imgIco);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,7 +64,7 @@ public class splash extends javax.swing.JFrame implements Runnable {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icono/iconoclinica.gif"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 550));
 
         jLabel2.setText("jLabel2");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 550, -1, 40));

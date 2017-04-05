@@ -44,7 +44,7 @@ public class Main extends javax.swing.JFrame {
     }
     public void configurations(){
         //maximizar en hambos sentidos
-        this.setExtendedState(MAXIMIZED_BOTH);
+        //this.setExtendedState(MAXIMIZED_BOTH);
         
         //pantalla completa
         //GraphicsDevice grafica=GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -95,6 +95,7 @@ public class Main extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
 
         jMenuItem16.setText("jMenuItem16");
 
@@ -105,21 +106,51 @@ public class Main extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton1.setText("USUARIO");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton2.setText("REPARAR");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton3.setText("COTIZACION");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton4.setText("FACTURA");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
 
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton5.setText("CLIENTE");
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
 
         jButton6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton6.setText("INVENTARIO");
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton6MouseClicked(evt);
+            }
+        });
 
         jButton7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButton7.setText("REPORTE");
@@ -256,7 +287,7 @@ public class Main extends javax.swing.JFrame {
         jMenu8.add(jMenuItem20);
 
         jMenuItem21.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jMenuItem21.setText("Cuadre Caja");
+        jMenuItem21.setText("Cuadrar Caja");
         jMenuItem21.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jMenuItem21MousePressed(evt);
@@ -303,6 +334,18 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jMenu6.add(jMenuItem11);
+
+        jMenuItem14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuItem14.setText("Inventario");
+        jMenuItem14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItem14MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem14MousePressed(evt);
+            }
+        });
+        jMenu6.add(jMenuItem14);
 
         jMenuBar1.add(jMenu6);
 
@@ -366,15 +409,16 @@ public class Main extends javax.swing.JFrame {
     private void jMenuItem11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem11MousePressed
         // TODO add your handling code here:
         if(this.validador.getBtCrearUsuario()){
-              //JFrameUser usuario =  new JFrameUser(this.mysql);
-               //     usuario.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
-              // usuario.setVisible(true);
+              crearUsuario c = new crearUsuario(this.mysql);
+              c.setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem11MousePressed
 
     private void jMenuItem4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem4MousePressed
         // TODO add your handling code here:
          if(this.validador.getBtCrearPaciente()){
+           crearCliente c = new crearCliente(this.mysql);
+           c.setVisible(true);
           //JFrameCrearPaciente crearPaciente=  new JFrameCrearPaciente(this.mysql);
           //crearPaciente.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
           //crearPaciente.setVisible(true);
@@ -383,12 +427,9 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MousePressed
         // TODO add your handling code here:
-        if(this.validador.getBtCrearSonografia()){
-          //JFrameCrearSonografia sonografia =  new JFrameCrearSonografia(this.mysql);
-          //sonografia.setYO(sonografia);
-          //sonografia.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
-          //sonografia.setVisible(true);
-        }
+        Reparacion c = new Reparacion(this.mysql);
+        c.setObjectReparacion(c);
+        c.setVisible(true);
     }//GEN-LAST:event_jMenuItem1MousePressed
 
     private void jMenuItem12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem12MousePressed
@@ -429,12 +470,17 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem6MousePressed
         // TODO add your handling code here:
-        if(this.validador.getBtCrearEntrega()){
-        }
+            Cotizacion contizacion = new Cotizacion(this.mysql);
+            contizacion.setObjectCotizacion(contizacion);
+            contizacion.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem6MousePressed
 
     private void jMenuItem18MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem18MousePressed
         // TODO add your handling code here:
+        Facturacion c = new Facturacion(this.mysql);
+        c.setObjectFacturacion(c);
+        c.setVisible(true);
     }//GEN-LAST:event_jMenuItem18MousePressed
 
     private void jMenuItem19MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem19MousePressed
@@ -443,15 +489,76 @@ public class Main extends javax.swing.JFrame {
 
     private void jMenuItem20MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem20MousePressed
         // TODO add your handling code here:
+        PagarNomina pn = new PagarNomina(this.mysql);
+        pn.setVisible(true);
     }//GEN-LAST:event_jMenuItem20MousePressed
 
     private void jMenuItem21MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem21MousePressed
         // TODO add your handling code here:
+        CuadreCaja cc = new CuadreCaja(this.mysql);
+        cc.setVisible(true);
     }//GEN-LAST:event_jMenuItem21MousePressed
 
     private void jMenuItem22MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem22MousePressed
         // TODO add your handling code here:
+         Facturacion c = new Facturacion(this.mysql);
+        c.setObjectFacturacion(c);
+        c.setVisible(true);
     }//GEN-LAST:event_jMenuItem22MousePressed
+
+    private void jMenuItem14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem14MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem14MouseClicked
+
+    private void jMenuItem14MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem14MousePressed
+        // TODO add your handling code here:
+         crearProducto c = new crearProducto(this.mysql);
+           c.setVisible(true);
+    }//GEN-LAST:event_jMenuItem14MousePressed
+
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+        // TODO add your handling code here:
+         crearProducto c = new crearProducto(this.mysql);
+           c.setVisible(true);
+    }//GEN-LAST:event_jButton6MouseClicked
+
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        // TODO add your handling code here:
+        if(this.validador.getBtCrearPaciente()){
+           crearCliente c = new crearCliente(this.mysql);
+           c.setVisible(true);
+          //JFrameCrearPaciente crearPaciente=  new JFrameCrearPaciente(this.mysql);
+          //crearPaciente.setDatosUsuario(this.session[0], this.session[1], this.session[3]);
+          //crearPaciente.setVisible(true);
+        }
+    }//GEN-LAST:event_jButton5MouseClicked
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+        // TODO add your handling code here:
+        Facturacion c = new Facturacion(this.mysql);
+        c.setObjectFacturacion(c);
+        c.setVisible(true);
+    }//GEN-LAST:event_jButton4MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        // TODO add your handling code here:
+         Cotizacion contizacion = new Cotizacion(this.mysql);
+         contizacion.setObjectCotizacion(contizacion);
+         contizacion.setVisible(true);
+    }//GEN-LAST:event_jButton3MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+         Reparacion c = new Reparacion(this.mysql);
+               c.setObjectReparacion(c);
+               c.setVisible(true);
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        crearUsuario c = new crearUsuario(this.mysql);
+        c.setVisible(true);
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -480,6 +587,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;

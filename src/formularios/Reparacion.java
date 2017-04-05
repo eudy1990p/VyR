@@ -57,6 +57,7 @@ public class Reparacion extends javax.swing.JFrame {
         this.estado_producto = new ArrayList<String>();
         this.precio_completo_producto = new ArrayList<String>();
     }
+    private int ultimoNumeroGeneredo = 0 ;
     private List productos;
     
     private String no_producto,n_producto,p_producto,c_producto,co_producto, sub_total,itbis_total, monto_total;
@@ -71,14 +72,14 @@ public class Reparacion extends javax.swing.JFrame {
     private String ClienteID="1",UsuarioID="1",ReparacionID="1",productoID="1";
     
     private String NCF = "",notaReparacion="";
-    
+ 
     private Reparacion ObjectReparacion;
     
-    public Reparacion() {
+    public Reparacion(Mysql mysql) {
         initComponents();
         //this.limpiarProductoTexto();
         this.limpiarTodoTexto();
-        mysql =new Mysql();
+        this.mysql =mysql;
 //        this.jTDeuda.setVisible(false);
         this.jTReparacion.setVisible(false);
   //      this.jTCotizacion.setVisible(false);
@@ -342,10 +343,13 @@ public class Reparacion extends javax.swing.JFrame {
     }
     public void crearReparacion(){
            if(!this.cotizado && (!this.deuda) ){
+            /*if(this.ultimoNumeroGeneredo <= 0){
+                this.insertarDBReparacion(this.subMontoTotal+"", this.notaReparacion,this.abonoTotal);
+            }*/
             this.insertarDBReparacion(this.subMontoTotal+"", this.notaReparacion,this.abonoTotal);
             int lineas = this.nombre_producto.size();
             String nombre,precio,cantidad,total,id,nota;
-            for(int c = 0 ; c < lineas ; c++){
+            for(int c = this.ultimoNumeroGeneredo ; c < lineas ; c++){
                      nombre = this.nombre_producto.get(c);
                      precio = this.precio_producto.get(c);
                      cantidad = this.cantidad_producto.get(c);
@@ -637,6 +641,11 @@ public class Reparacion extends javax.swing.JFrame {
         jPopupMenu1.add(RegistrarPaso);
 
         Historial.setText("Detalle");
+        Historial.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                HistorialMousePressed(evt);
+            }
+        });
         jPopupMenu1.add(Historial);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1051,7 +1060,7 @@ public class Reparacion extends javax.swing.JFrame {
             this.mostrarPDF = true;
             this.completarReparacion();
             
-            Facturacion f = new Facturacion();
+            Facturacion f = new Facturacion(this.mysql);
             
             f.setDatosCliente(this.ClienteID, this.t_nombre_cliente.getText(), this.t_cedula_cliente.getText(), this.t_telefono_cliente.getText(),this.t_email_cliente.getText());
             f.cargarTablaParaFacturar(this.ReparacionID,"reparacion");
@@ -1205,6 +1214,11 @@ public class Reparacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.pop();
     }//GEN-LAST:event_RegistrarPasoMousePressed
+
+    private void HistorialMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HistorialMousePressed
+        // TODO add your handling code here:
+        this.pop1();
+    }//GEN-LAST:event_HistorialMousePressed
 public void pop(){
     String r_detalle_id = "";
         int row = this.jTableR.getSelectedRow();
@@ -1213,42 +1227,18 @@ public void pop(){
         pasos.obtenerDatosDB(r_detalle_id);
         pasos.setVisible(true);
 }
+public void pop1(){
+    String r_detalle_id = "";
+        int row = this.jTableR.getSelectedRow();
+        r_detalle_id = this.jTableR.getValueAt(row, 0).toString();
+        historialItemReparacion pasos = new historialItemReparacion(this.mysql);
+        pasos.obtenerDatosDB(r_detalle_id);
+        pasos.setVisible(true);
+}
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Reparacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Reparacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Reparacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Reparacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-               Reparacion c = new Reparacion();
-               c.setObjectReparacion(c);
-               c.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Historial;

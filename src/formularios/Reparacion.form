@@ -20,6 +20,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Detalle"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="HistorialMousePressed"/>
+          </Events>
         </MenuItem>
       </SubComponents>
     </Container>

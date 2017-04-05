@@ -125,8 +125,9 @@ public class crearCliente extends javax.swing.JFrame {
            if( (!this.sector.isEmpty()) || (!this.provincia.isEmpty()) || (!this.direccion.isEmpty()) ){
                this.insertarDBDireccion();
            }
+           this.insertarDBCliente();
            if(this.classSeleccionListado.getCotizacion() != null){
-                this.insertarDBCliente();
+                
                 this.dispose();
                 this.classSeleccionListado.getCotizacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
                 this.classSeleccionListado.perderFocus();
@@ -134,7 +135,7 @@ public class crearCliente extends javax.swing.JFrame {
            }
            
            if(this.classSeleccionListado.getFacturacion() != null){
-                this.insertarDBCliente();
+                //this.insertarDBCliente();
                 this.dispose();
                 this.classSeleccionListado.getFacturacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
                  this.classSeleccionListado.getFacturacion().setRNCCliente(rnc);
@@ -142,12 +143,16 @@ public class crearCliente extends javax.swing.JFrame {
                 this.classSeleccionListado.dispose();
            }
            if(this.classSeleccionListado.getReparacion() != null){
-                this.insertarDBCliente();
+                //this.insertarDBCliente();
                 this.dispose();
                 this.classSeleccionListado.getReparacion().setDatosCliente(this.clienteID, this.nombre, this.cedula,this.telefono,this.email);
                 this.classSeleccionListado.perderFocus();
                 this.classSeleccionListado.dispose();
            }
+          /* if( (this.classSeleccionListado.getReparacion()  == null) && (this.classSeleccionListado.getFacturacion()  == null) && (this.classSeleccionListado.getCotizacion() == null) ){
+               this.insertarDBCliente();
+               JOptionPane.showMessageDialog(null, "Insertado Correctamente","Cliente Creado",JOptionPane.INFORMATION_MESSAGE);
+           }*/
         }
     }
     /**
