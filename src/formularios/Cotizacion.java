@@ -179,9 +179,9 @@ public class Cotizacion extends javax.swing.JFrame {
         }
         monto_total = monto - itbis; 
         
-        this.montoTotal +=monto_total;
-        this.itbisTotal += itbis;
-        this.subMontoTotal += monto;
+        this.montoTotal =monto_total;
+        this.itbisTotal = itbis;
+        this.subMontoTotal = monto;
         this.itbis_total = ""+itbis;
         this.monto_total = ""+monto_total;
         this.cotizacion_itbis_total.setText("$ "+this.itbisTotal);
@@ -189,6 +189,8 @@ public class Cotizacion extends javax.swing.JFrame {
         this.cotizacion_monto_total.setText("$ "+this.montoTotal);
     }
     public void cargarJTable(){
+           double monto =0.00;
+           
            String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL"};
            int lineas = this.nombre_producto.size();
            String nombre,precio,cantidad,total,id;
@@ -210,8 +212,11 @@ public class Cotizacion extends javax.swing.JFrame {
                     fila[c][3] = precio;
                     fila[c][4] = total;
                     
+                    monto += Double.parseDouble(total);
+                    
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
+          this.totales(monto);
           DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
           this.jTable1.setModel(modelo);
     }
@@ -336,6 +341,8 @@ public class Cotizacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cotizacion_sub_total = new javax.swing.JLabel();
@@ -360,6 +367,14 @@ public class Cotizacion extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+
+        jMenuItem1.setText("Eliminar Item");
+        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenuItem1MousePressed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -556,6 +571,7 @@ public class Cotizacion extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         jButton2.setText("VISTA PREVIA");
@@ -751,6 +767,26 @@ public class Cotizacion extends javax.swing.JFrame {
    
     }//GEN-LAST:event_t_email_clienteFocusLost
 
+    private void jMenuItem1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MousePressed
+        // TODO add your handling code here:
+        this.eliminarItem();
+    }//GEN-LAST:event_jMenuItem1MousePressed
+    public void eliminarItem(){
+        
+        int row = this.jTable1.getSelectedRow();
+        
+        this.nombre_producto.remove(row);
+        this.cantidad_producto.remove(row);
+        this.codigo_producto.remove(row);
+        this.precio_producto.remove(row);
+        this.producto_id.remove(row);
+        this.sub_total_producto.remove(row);
+        JOptionPane.showMessageDialog(null, "El item se elimino de forma correcta", "Item Eliminado", JOptionPane.INFORMATION_MESSAGE);
+        if(this.nombre_producto.size() <= 0){
+             this.no_agrego_producto = false;
+        }
+        this.cargarJTable();
+    }
     /**
      * @param args the command line arguments
      */
@@ -767,9 +803,11 @@ public class Cotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField t_cantidad_producto;
