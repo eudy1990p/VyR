@@ -23,6 +23,13 @@ public class crearCliente extends javax.swing.JFrame {
     private String personaID="1",usuarioID="1",clienteID="1";
     private SeleccionLista classSeleccionListado;
     private String trabajandoClase = "contizacion";
+     private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.usuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
             
     public crearCliente(Mysql mysql) {
         initComponents();
@@ -191,6 +198,7 @@ public class crearCliente extends javax.swing.JFrame {
         btMostrarOpciones = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Crear Cliente");
 
         JTADireccionCliente.setColumns(20);
         JTADireccionCliente.setRows(5);

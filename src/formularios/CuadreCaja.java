@@ -32,6 +32,15 @@ public class CuadreCaja extends javax.swing.JFrame {
     /**
      * Creates new form SeleccionLista
      */
+    
+     private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.usuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public CuadreCaja(Mysql mysql) {
         initComponents();
         this.CuandoCerrar();

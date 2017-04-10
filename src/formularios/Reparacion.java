@@ -75,6 +75,14 @@ public class Reparacion extends javax.swing.JFrame {
  
     private Reparacion ObjectReparacion;
     
+    private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.UsuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public Reparacion(Mysql mysql) {
         initComponents();
         //this.limpiarProductoTexto();
@@ -415,9 +423,9 @@ public class Reparacion extends javax.swing.JFrame {
         this.sub_total = ""+monto;
         
         monto_total = monto ; 
-        this.montoTotal +=monto_total;
+        this.montoTotal =monto_total;
         //this.itbisTotal += itbis;
-        this.subMontoTotal += monto;
+        this.subMontoTotal = monto;
         this.itbis_total = ""+itbis;
         this.monto_total = ""+monto_total;
         this.cotizacion_itbis_total.setText("$ 0.00"/*+this.itbisTotal*/);
@@ -430,6 +438,7 @@ public class Reparacion extends javax.swing.JFrame {
         this.subMontoTotal = 0.00;
     }
     public void cargarJTable(){
+            double monto =0.00;
            String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL","PRECIO COMPLETADO","ESTADO","NOTA"};
            int lineas = this.nombre_producto.size();
            String nombre,precio,cantidad,total,id,nota,precioCompleto,estado;
@@ -456,9 +465,10 @@ public class Reparacion extends javax.swing.JFrame {
                     fila[c][6] = precioCompleto;
                     
                     fila[c][7] = nota;
-                    
+                     monto += Double.parseDouble(total);
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
+          this.totales(monto);
           DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
           this.jTableR.setModel(modelo);
     }
@@ -525,6 +535,7 @@ public class Reparacion extends javax.swing.JFrame {
     public void administrar_focus_clientes(String menu,String tabla){
         SeleccionLista selecciona = new SeleccionLista(this.mysql,tabla);
          selecciona.setObjectReparacion(this.ObjectReparacion);
+         selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Cliente");
          selecciona.validarReparacion();
         
          selecciona.setSeleccionLista(selecciona);
@@ -563,12 +574,14 @@ public class Reparacion extends javax.swing.JFrame {
                 Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
                 selecciona.setTextBox(t_codigo_producto);
                 selecciona.setPalabra("codigo");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
             case "nombre_producto":
                 Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 //Texto.setPlaceholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 selecciona.setTextBox(t_nombre_producto);
                 selecciona.setPalabra("nombre");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
         }
         
@@ -597,6 +610,7 @@ public class Reparacion extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         RegistrarPaso = new javax.swing.JMenuItem();
         Historial = new javax.swing.JMenuItem();
+        jMIEliminar = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cotizacion_sub_total = new javax.swing.JLabel();
@@ -648,7 +662,16 @@ public class Reparacion extends javax.swing.JFrame {
         });
         jPopupMenu1.add(Historial);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jMIEliminar.setText("Eliminar");
+        jMIEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMIEliminarMousePressed(evt);
+            }
+        });
+        jPopupMenu1.add(jMIEliminar);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Reparación");
 
         jLabel2.setText("Sub Total $");
 
@@ -1219,7 +1242,28 @@ public class Reparacion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.pop1();
     }//GEN-LAST:event_HistorialMousePressed
-public void pop(){
+
+    private void jMIEliminarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMIEliminarMousePressed
+        // TODO add your handling code here:
+        this.eliminarItem();
+    }//GEN-LAST:event_jMIEliminarMousePressed
+ public void eliminarItem(){
+        
+        int row = this.jTableR.getSelectedRow();
+        
+        this.nombre_producto.remove(row);
+        this.cantidad_producto.remove(row);
+        this.codigo_producto.remove(row);
+        this.precio_producto.remove(row);
+        this.producto_id.remove(row);
+        this.sub_total_producto.remove(row);
+        JOptionPane.showMessageDialog(null, "El item se elimino de forma correcta", "Item Eliminado", JOptionPane.INFORMATION_MESSAGE);
+        if(this.nombre_producto.size() <= 0){
+             this.no_agrego_producto = false;
+        }
+        this.cargarJTable();
+    }
+    public void pop(){
     String r_detalle_id = "";
         int row = this.jTableR.getSelectedRow();
         r_detalle_id = this.jTableR.getValueAt(row, 0).toString();
@@ -1258,6 +1302,7 @@ public void pop1(){
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenuItem jMIEliminar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

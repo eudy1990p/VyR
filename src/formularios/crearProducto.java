@@ -22,7 +22,15 @@ public class crearProducto extends javax.swing.JFrame {
     private String nombre="",precioVenta,precioCompra,cantidadComprada,cantidadVendida;
     private String productoID="1",usuarioID="1";
     private SeleccionLista classSeleccionListado;
-            
+    
+     private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.usuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public crearProducto(Mysql mysql) {
         initComponents();
         this.mysql = mysql;
@@ -169,6 +177,7 @@ public class crearProducto extends javax.swing.JFrame {
         btMostrarOpciones = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Crear Producto");
 
         JTFPrecioVentaProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

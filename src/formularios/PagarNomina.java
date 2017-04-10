@@ -28,6 +28,14 @@ public class PagarNomina extends javax.swing.JFrame {
     private int totalEmpleados = 0;
     private String UsuarioID= "1";
     
+     private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.UsuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public PagarNomina(Mysql mysql) {
         initComponents();
        this.mysql = mysql;  

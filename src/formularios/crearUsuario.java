@@ -23,7 +23,16 @@ public class crearUsuario extends javax.swing.JFrame {
     private String personaID="1",usuarioID="1",empleadoID="1",usuarioEmpleadoID="1";
     private SeleccionLista classSeleccionListado;
     private String trabajandoClase = "contizacion";
-            
+    
+     private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.usuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
+    
     public crearUsuario(Mysql mysql) {
         initComponents();
         this.mysql = mysql;
@@ -228,6 +237,7 @@ public class crearUsuario extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Crear Usuario y Empleado");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         JTADireccionCliente.setColumns(20);

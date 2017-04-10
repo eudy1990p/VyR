@@ -31,7 +31,15 @@ public class SeleccionLista extends javax.swing.JFrame {
     private String claseManejando ="cotizacion";
 
     private String tipoProducto="venta_producto";
-
+ private String nombreUsuario = "",UsuarioID = "1";
+    
+    public void setDatosUsuario(String nombre,String id,String titulo){
+        this.nombreUsuario = nombre;
+        this.UsuarioID = id;
+        this.setTitle(titulo);
+        System.out.println(nombre+" "+id+" "+titulo);
+        
+    }
         
     public Cotizacion getCotizacion() {
         return cotizacion;
@@ -81,10 +89,12 @@ public class SeleccionLista extends javax.swing.JFrame {
     public void crearNuevoDBTabla(){
           if(this.tablaSeleccionada.equals("producto")){
                crearProducto crearCliente = new crearProducto(this.mysql);
+               crearCliente.setDatosUsuario(this.nombreUsuario,this.UsuarioID);
                 crearCliente.setClassSeleccionListado(this.seleccionador);
                 crearCliente.setVisible(true);
           }else if(this.tablaSeleccionada.equals("cliente")){
               crearCliente crearCliente = new crearCliente(this.mysql);
+              crearCliente.setDatosUsuario(this.nombreUsuario,this.UsuarioID);
               crearCliente.setClassSeleccionListado(this.seleccionador);
               crearCliente.setVisible(true);
           }

@@ -55,6 +55,14 @@ public class Cotizacion extends javax.swing.JFrame {
     
     private Cotizacion ObjectCotizacion;
     
+    private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.UsuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public Cotizacion(Mysql mysql) {
         initComponents();
         //this.limpiarProductoTexto();
@@ -274,6 +282,7 @@ public class Cotizacion extends javax.swing.JFrame {
     public void administrar_focus_clientes(String menu,String tabla){
         SeleccionLista selecciona = new SeleccionLista(this.mysql,tabla);
          selecciona.setObjectCotizacion(this.ObjectCotizacion);
+         selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Cliente");
          selecciona.setSeleccionLista(selecciona);
         //JOptionPane.showMessageDialog(null, menu+" "+tabla);
          switch(menu){
@@ -310,12 +319,14 @@ public class Cotizacion extends javax.swing.JFrame {
                 Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
                 selecciona.setTextBox(t_codigo_producto);
                 selecciona.setPalabra("codigo");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
             case "nombre_producto":
                 Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 //Texto.setPlaceholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 selecciona.setTextBox(t_nombre_producto);
                 selecciona.setPalabra("nombre");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
         }
         
@@ -376,7 +387,8 @@ public class Cotizacion extends javax.swing.JFrame {
         });
         jPopupMenu1.add(jMenuItem1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cotización");
 
         jLabel2.setText("Sub Total $");
 

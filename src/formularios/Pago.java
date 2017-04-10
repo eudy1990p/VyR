@@ -6,6 +6,9 @@
 package formularios;
 
 import conexion.Mysql;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +25,11 @@ public class Pago extends javax.swing.JFrame {
     private Facturacion facturacion = null;
     private String balance = "0.00",cambio = "0.00",montoPagado = "0.00",balanceDespuesDelPago = "0.00",tipoPago = "";
     private String facturaID = "1",usuarioID = "1";
+
+    public void setFacturaID(String facturaID) {
+        this.facturaID = facturaID;
+        this.obtenerDatoFacturaAPagar();
+    }
     private Facturacion ObjectFacturacion;
     
     public Pago(Mysql mysql) {
@@ -47,6 +55,28 @@ public class Pago extends javax.swing.JFrame {
          }
          this.setValores();
     }
+    private String balanceDeudaDespuesPago = "0.00",montoDeudaFactura = "0.00";
+    public void obtenerDatoFacturaAPagar(){
+            String table_name = " factura ";
+            String campos = " * ";
+            String otros = " where id = '"+this.facturaID+"' ";
+            java.sql.ResultSet resultSet = this.mysql.optenerDatosParaTabla(table_name, campos, otros);
+            try {
+                resultSet.beforeFirst();
+                resultSet.last();
+                this.totalFila  = resultSet.getRow();
+                resultSet.beforeFirst();
+                int c = 0;
+                if(resultSet.next()){
+                    this.balanceDeudaDespuesPago = Texto.validarNull(resultSet.getString("balance_deuda"));
+                    this.montoDeudaFactura = Texto.validarNull(resultSet.getString("total"));
+                    c++;
+                }
+            } catch (SQLException ex) {
+            Logger.getLogger(SeleccionLista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+    }
     public void getValores(){
         this.tipoPago = this.jCBTipoPago.getSelectedItem().toString();
         this.montoPagado = this.jTextField1.getText();
@@ -63,6 +93,13 @@ public class Pago extends javax.swing.JFrame {
            
              String campos = "usuario_id,monto_pagado,balance_anterior,balance_despues_del_pago,cambio,fecha_creado,tipo_pago,factura_id ";
              String valores = "'"+this.usuarioID+"','"+this.montoPagado+"','"+this.balance+"','"+this.balanceDespuesDelPago+"','"+this.cambio+"',now(),'"+this.tipoPago+"','"+this.facturaID+"'";
+             this.mysql.insertData("pagos", campos, valores);
+            
+    }
+    public void insertarDBPagoFacturacion(String pago,String balanceAnterior,String balanceDespuesDelPago,String cambio){
+           
+             String campos = "usuario_id,monto_pagado,balance_anterior,balance_despues_del_pago,cambio,fecha_creado,tipo_pago,factura_id ";
+             String valores = "'"+this.usuarioID+"','"+pago+"','"+balanceAnterior+"','"+balanceDespuesDelPago+"','"+cambio+"',now(),'"+this.tipoPago+"','"+this.facturaID+"'";
              this.mysql.insertData("pagos", campos, valores);
             
     }
@@ -207,12 +244,48 @@ public class Pago extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!this.jTextField1.getText().isEmpty()){
             this.calcularCambio();
-            this.insertarDBPagoFacturacion();
+            this.verificarSiHanPagadoAntes();
+            //this.insertarDBPagoFacturacion();
         }else{
             JOptionPane.showMessageDialog(null, "Debe de ingresar el monto a pagar", "Monto Vacío", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
+    public void verificarSiHanPagadoAntes(){
+        this.getValores();
+        double deuda = Double.parseDouble(this.balanceDeudaDespuesPago);
+        double pago =  Double.parseDouble(this.montoPagado);
+        double efectivo = deuda - pago;
+        if(deuda > 0){
+            if(efectivo <= 0 ){
+                this.actualizarFacturaSaldada("0.00", pago+"", ( efectivo *(-1) )+"", "saldada");
+                insertarDBPagoFacturacion(pago+"",deuda+"","0.00",( efectivo *(-1) )+"");
+            }else{
+                this.actualizarFacturaSaldada(efectivo+"", pago+"","0.00", "pendiente");
+                insertarDBPagoFacturacion(pago+"",deuda+"",efectivo+"","0.00");
+            }
+            //this.insertarDBPagoFacturacion();
+        }else{
+            deuda =  Double.parseDouble(this.montoDeudaFactura);
+            efectivo = deuda - pago;
+            if(efectivo <= 0 ){
+                this.actualizarFacturaSaldada("0.00", pago+"", ( efectivo *(-1) )+"", "saldada");
+               // this.insertarDBPagoFacturacion();
+               insertarDBPagoFacturacion(pago+"",deuda+"","0.00",( efectivo *(-1) )+"");
+            }else{
+                this.actualizarFacturaSaldada(efectivo+"", pago+"","0.00", "pendiente");
+                insertarDBPagoFacturacion(pago+"",deuda+"",efectivo+"","0.00");
+                //this.insertarDBPagoFacturacion();
+            }
+            //this.insertarDBPagoFacturacion();
+        }
+        //saldada
+    }
+    public void actualizarFacturaSaldada(String montoDeuda,String montoPagado,String montoEfectivo, String estado){
+        String campos = "estado = '"+estado+"', balance_deuda = "+montoDeuda+",monto_pagado = monto_pagado + "+montoPagado+", cambio_efectivo = "+montoEfectivo+" ";
+        String where = " id = '"+this.facturaID+"' ";
+        this.mysql.actulizarDatos(" factura ",campos, where);
+    }
     /**
      * @param args the command line arguments
      */

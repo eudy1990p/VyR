@@ -66,6 +66,14 @@ public class Facturacion extends javax.swing.JFrame {
     
     private Facturacion ObjectFacturacion;
     
+    private String nombreUsuario = "";
+    
+    public void setDatosUsuario(String nombre,String id){
+        this.nombreUsuario = nombre;
+        this.UsuarioID = id;
+        System.out.println(nombre+" "+id);
+    }
+    
     public Facturacion(Mysql mysql) {
         initComponents();
         //this.limpiarProductoTexto();
@@ -395,9 +403,9 @@ public class Facturacion extends javax.swing.JFrame {
             itbis = monto * 0.18; 
         }
         monto_total = monto + itbis; 
-        this.montoTotal +=monto_total;
-        this.itbisTotal += itbis;
-        this.subMontoTotal += monto;
+        this.montoTotal =monto_total;
+        this.itbisTotal = itbis;
+        this.subMontoTotal = monto;
         this.itbis_total = ""+itbis;
         this.monto_total = ""+monto_total;
         this.cotizacion_itbis_total.setText("$ "+this.itbisTotal);
@@ -410,6 +418,7 @@ public class Facturacion extends javax.swing.JFrame {
         this.subMontoTotal = 0.00;
     }
     public void cargarJTable(){
+             double monto =0.00;
            String[] titulos = {"CODIGO","PRODUCTO","CANTIDAD","PRECIO","SUB TOTAL"};
            int lineas = this.nombre_producto.size();
            String nombre,precio,cantidad,total,id;
@@ -430,9 +439,10 @@ public class Facturacion extends javax.swing.JFrame {
                     fila[c][2] = cantidad;
                     fila[c][3] = precio;
                     fila[c][4] = total;
-                    
+                     monto += Double.parseDouble(total);
                     this.productos.add( new producto(nombre,precio,cantidad,total) );
            }
+           this.totales(monto);
           DefaultTableModel modelo = new DefaultTableModel(fila,titulos);
           this.jTable1.setModel(modelo);
     }
@@ -499,7 +509,7 @@ public class Facturacion extends javax.swing.JFrame {
     public void administrar_focus_clientes(String menu,String tabla){
         SeleccionLista selecciona = new SeleccionLista(this.mysql,tabla);
          selecciona.setObjectFacturacion(this.ObjectFacturacion);
-        
+        selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Cliente");
          selecciona.setSeleccionLista(selecciona);
         //JOptionPane.showMessageDialog(null, menu+" "+tabla);
          switch(menu){
@@ -536,12 +546,14 @@ public class Facturacion extends javax.swing.JFrame {
                 Texto.placeholder(Texto.codigo_producto,this.t_codigo_producto.getText(), this.t_codigo_producto);
                 selecciona.setTextBox(t_codigo_producto);
                 selecciona.setPalabra("codigo");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
             case "nombre_producto":
                 Texto.placeholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 //Texto.setPlaceholder(Texto.nombre_producto,this.t_nombre_producto.getText(), this.t_nombre_producto);
                 selecciona.setTextBox(t_nombre_producto);
                 selecciona.setPalabra("nombre");
+                selecciona.setDatosUsuario(this.nombreUsuario, this.UsuarioID, "Listado De Producto");
             break;
         }
         
@@ -567,6 +579,8 @@ public class Facturacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMIEliminar = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cotizacion_sub_total = new javax.swing.JLabel();
@@ -607,7 +621,16 @@ public class Facturacion extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTDeuda = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jMIEliminar.setText("Eliminar");
+        jMIEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMIEliminarMousePressed(evt);
+            }
+        });
+        jPopupMenu1.add(jMIEliminar);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Facturación");
 
         jLabel2.setText("Sub Total $");
 
@@ -802,6 +825,7 @@ public class Facturacion extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         jButton2.setText("VISTA PREVIA");
@@ -1156,6 +1180,7 @@ public class Facturacion extends javax.swing.JFrame {
             Pago p = new Pago(this.mysql);
             p.setObjectFacturacion(this.ObjectFacturacion);
             p.setBalance(this.monto_total);
+            p.setFacturaID(this.FacturacionID);
             p.setVisible(true);
         }else{
             int respuesta  = JOptionPane.showConfirmDialog(  null,  "Debe generar la factura antes de pagarla, Desea generarla ahora?","Advertencia ",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1167,6 +1192,7 @@ public class Facturacion extends javax.swing.JFrame {
                 }
                 if(this.factura_generada){
                         Pago p = new Pago(this.mysql);
+                        p.setFacturaID(this.FacturacionID);
                         p.setObjectFacturacion(this.ObjectFacturacion);
                         p.setBalance(this.monto_total);
                         p.setVisible(true);
@@ -1209,6 +1235,26 @@ public class Facturacion extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_JCBTieneITBISStateChanged
 
+    private void jMIEliminarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMIEliminarMousePressed
+        // TODO add your handling code here:
+        this.eliminarItem();
+    }//GEN-LAST:event_jMIEliminarMousePressed
+ public void eliminarItem(){
+        
+        int row = this.jTable1.getSelectedRow();
+        
+        this.nombre_producto.remove(row);
+        this.cantidad_producto.remove(row);
+        this.codigo_producto.remove(row);
+        this.precio_producto.remove(row);
+        this.producto_id.remove(row);
+        this.sub_total_producto.remove(row);
+        JOptionPane.showMessageDialog(null, "El item se elimino de forma correcta", "Item Eliminado", JOptionPane.INFORMATION_MESSAGE);
+        if(this.nombre_producto.size() <= 0){
+             this.no_agrego_producto = false;
+        }
+        this.cargarJTable();
+    }
     /**
      * @param args the command line arguments
      */
@@ -1233,9 +1279,11 @@ public class Facturacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenuItem jMIEliminar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
